@@ -1,0 +1,90 @@
+/* General reset for body and container */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    display: block;
+    min-height: 100vh; /* Make sure the body covers the full screen */
+    padding: 0;
+}
+
+/* Login container */
+.login-container {
+    background-color: rgb(0, 0, 0);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 100px auto; /* This centers the login container without affecting the body */
+    text-align: center;
+    border : 1px solid #00FFFF;
+    border-radius: 7px;
+}
+
+/* Icon styles */
+.login-container svg {
+    color: #ffffff; /* Color for the user icon */
+}
+
+/* Title styles */
+.login-container h2 {
+    font-size: 1.5rem;
+    margin: 20px 0;
+    color: #ffffff;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="password"] {
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* Input focus styles */
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #5c6bc0;
+}
+
+/* Submit button */
+button[type="submit"] {
+    padding: 12px;
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Button hover effect */
+button[type="submit"]:hover {
+    background-color: #3f51b5;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 15px;
+        width: 90%;
+    }
+}

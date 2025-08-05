@@ -1,0 +1,16 @@
+.bgdark {
+    background:#1A2229;
+    color: white;
+    border: 1px solid #00FFFF;
+    border-radius: 7px;
+}
+
+  .table th {
+    background-color: #222; /* Fondo oscuro para el encabezado */
+    color: aqua; /* Color de texto para el encabezado */
+    font-weight: bold; /* Texto en negrita */
+  }
+  .table td {
+    color: white; /* Color de texto para las celdas */
+    font-size: 15px; /* Tamaño de fuente */
+  }  
