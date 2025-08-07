@@ -1,207 +1,120 @@
-import React, { useState } from 'react';
-import {
-  Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, TablePagination, Select, MenuItem, InputLabel, FormControl
-} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
-import './Usuario.css'; // Archivo CSS para estilos visuales
+import UsuarioTable from './UsuarioTable';
+import AgregarUsuario from './AgregarUsuario';
+import EditarUsuario from './EditarUsuario';
 
-function App() {
-  const [open, setOpen] = useState(false);
-  const [editando, setEditando] = useState(null);
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    estado: 'activo',
-    rol_id: ''
-  });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+const api = "http://localhost:8000/api/users";
 
-  const roles = [
-    { id: 1, rol: 'Administrador' },
-    { id: 2, rol: 'Usuario' }
-  ];
+const Usuario = () => {
+  const [usuarios, setUsuarios] = useState([]);
+  const [openAgregar, setOpenAgregar] = useState(false);
+  const [openEditar, setOpenEditar] = useState(false);
+  const [usuarioEditar, setUsuarioEditar] = useState(null);
 
-  const usuarios = [
-    { id: 1, username: 'juan', estado: 'activo', rol_id: 1 },
-    { id: 2, username: 'maria', estado: 'inactivo', rol_id: 2 },
-    { id: 3, username: 'pedro', estado: 'activo', rol_id: 2 }
-  ];
-
-  const handleOpen = (usuario = null) => {
-    if (usuario) {
-      setEditando(usuario.id);
-      setFormData({ ...usuario, password: '' });
-    } else {
-      setEditando(null);
-      setFormData({ username: '', password: '', estado: 'activo', rol_id: '1' });
+  const obtenerUsuarios = async () => {
+    try {
+      const res = await axios.get(api);
+      setUsuarios(res.data);
+    } catch (err) {
+      Swal.fire('Error', 'Error al obtener usuarios: ' + err.message, 'error');
     }
-    setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setEditando(null);
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []);
+
+  const handleOpenAgregar = () => {
+    setOpenAgregar(true);
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleCloseAgregar = () => {
+    setOpenAgregar(false);
   };
 
-  const filteredUsuarios = usuarios.filter(usuario =>
-    usuario.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const paginatedUsuarios = filteredUsuarios.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleOpenEditar = (usuario) => {
+    setUsuarioEditar(usuario);
+    setOpenEditar(true);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const handleCloseEditar = () => {
+    setUsuarioEditar(null);
+    setOpenEditar(false);
+  };
+
+  const agregarUsuario = async (nuevoUsuario) => {
+    try {
+      await axios.post(api, nuevoUsuario);
+      obtenerUsuarios();
+      handleCloseAgregar();
+      Swal.fire('Éxito', 'Usuario agregado correctamente', 'success');
+    } catch (err) {
+      Swal.fire('Error', 'No se pudo agregar el usuario: ' + err.message, 'error');
+    }
+  };
+
+  const editarUsuario = async (id, usuarioActualizado) => {
+    try {
+      await axios.put(`${api}/${id}`, usuarioActualizado);
+      obtenerUsuarios();
+      handleCloseEditar();
+      Swal.fire('Éxito', 'Usuario actualizado correctamente', 'success');
+    } catch (err) {
+      Swal.fire('Error', 'No se pudo actualizar el usuario: ' + err.message, 'error');
+    }
+  };
+
+  const eliminarUsuario = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡Esta acción no se puede deshacer!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${api}/${id}`);
+        obtenerUsuarios();
+        Swal.fire('Eliminado', 'El usuario ha sido eliminado.', 'success');
+      } catch (err) {
+        Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
+      }
+    }
   };
 
   return (
-    <Container maxWidth={false}>
+    <>
       <h1 style={{ textAlign: 'center', color: 'white' }}>Administración de Usuarios</h1>
 
-      <Button
-        variant="contained"
-        color="success"
-        onClick={() => handleOpen()}
-        style={{ padding: 10 }}
-      >
-        Agregar Usuario
-      </Button>
-
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Buscar usuario"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        InputLabelProps={{ style: { color: 'white' } }}
-        InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
+      <UsuarioTable
+        usuarios={usuarios}
+        onAgregar={handleOpenAgregar}
+        onEditar={handleOpenEditar}
+        onEliminar={eliminarUsuario}
       />
 
-      <TableContainer component={Paper}>
-        <Table className="table bgdark">
-          <TableHead>
-            <TableRow>
-              <TableCell>Username</TableCell>
-              <TableCell>Estado</TableCell>
-              <TableCell>Rol</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedUsuarios.map((usuario) => (
-              <TableRow key={usuario.id}>
-                <TableCell>{usuario.username}</TableCell>
-                <TableCell>{usuario.estado}</TableCell>
-                <TableCell>{roles.find(role => role.id === usuario.rol_id)?.rol}</TableCell>
-                <TableCell>
-                  <Button onClick={() => handleOpen(usuario)} color="primary" variant="contained">Editar</Button>
-                  <Button color="error" variant="contained" style={{ marginLeft: '10px' }}>Eliminar</Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <TablePagination
-        rowsPerPageOptions={[6, 10, 25]}
-        component="div"
-        count={filteredUsuarios.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        style={{ color: 'white' }}
+      <AgregarUsuario
+        open={openAgregar}
+        onClose={handleCloseAgregar}
+        onGuardar={agregarUsuario}
       />
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle className='bgdark' style={{ color: 'aqua' }}>
-          {editando ? 'Editar Usuario' : 'Agregar Usuario'}
-        </DialogTitle>
-        <DialogContent className='bgdark'>
-          <form>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Usuario"
-              type="text"
-              fullWidth
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              InputLabelProps={{ style: { color: 'white' } }}
-              InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
-            />
-
-            <TextField
-              margin="dense"
-              label="Contraseña"
-              type="password"
-              fullWidth
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              InputLabelProps={{ style: { color: 'white' } }}
-              InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
-            />
-
-            <FormControl fullWidth margin="dense">
-              <InputLabel id="rol-select-label" style={{ color: 'white' }}>Rol</InputLabel>
-              <Select
-                labelId="rol-select-label"
-                name="rol_id"
-                value={formData.rol_id}
-                onChange={handleChange}
-                style={{ color: 'white', border: '1px solid aqua' }}
-                fullWidth
-              >
-                {roles.map((rol) => (
-                  <MenuItem key={rol.id} value={rol.id} style={{ color: 'aqua', backgroundColor: '#1A2229' }}>
-                    {rol.rol}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth margin="dense">
-              <InputLabel id="estado-select-label" style={{ color: 'white' }}>Estado</InputLabel>
-              <Select
-                labelId="estado-select-label"
-                name="estado"
-                value={formData.estado}
-                onChange={handleChange}
-                style={{ color: 'white', border: '1px solid aqua' }}
-                fullWidth
-              >
-                <MenuItem value="activo" style={{ color: 'aqua', backgroundColor: '#1A2229' }}>Activo</MenuItem>
-                <MenuItem value="inactivo" style={{ color: 'aqua', backgroundColor: '#1A2229' }}>Inactivo</MenuItem>
-              </Select>
-            </FormControl>
-
-            <DialogActions>
-              <Button onClick={handleClose} color="error" variant="contained">
-                Cancelar
-              </Button>
-              <Button type="button" color="primary" variant="contained">
-                {editando ? 'Actualizar' : 'Agregar'}
-              </Button>
-            </DialogActions>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </Container>
+      <EditarUsuario
+        open={openEditar}
+        usuario={usuarioEditar}
+        onClose={handleCloseEditar}
+        onGuardar={editarUsuario}
+      />
+    </>
   );
-}
+};
 
-export default App;
+export default Usuario;

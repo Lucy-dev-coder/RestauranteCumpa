@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+
             $table->string('password');
             $table->enum('rol', ['admin', 'cajero'])->nullable();
-            $table->boolean('activo')->default(true)->comment('0 = inactivo, 1 = activo');
+            $table->enum('estado', ['habilitado', 'deshabilitado'])->default('habilitado')->comment('Estado del usuario');
             $table->rememberToken();
             $table->timestamps();
         });

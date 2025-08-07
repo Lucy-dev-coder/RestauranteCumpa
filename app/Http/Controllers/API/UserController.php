@@ -21,7 +21,7 @@ class UserController extends Controller
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
             'rol'      => 'required|in:admin,cajero',
-            'activo'   => 'required|boolean'
+            'estado'   => 'habilitado',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -43,10 +43,10 @@ class UserController extends Controller
             'email'    => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
             'rol'      => 'required|in:admin,cajero',
-            'activo'   => 'required|boolean'
+            'estado'   => 'required|in:habilitado,deshabilitado',
         ]);
 
-        if ($validated['password']) {
+        if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
