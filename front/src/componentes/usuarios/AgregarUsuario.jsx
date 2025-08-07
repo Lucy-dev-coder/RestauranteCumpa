@@ -51,7 +51,7 @@ const AgregarUsuario = ({ open, onClose, onGuardar }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle style={{ color: 'aqua', backgroundColor: '#1A2229' }}>
+      <DialogTitle style={{ color: 'orange', backgroundColor: '#1A2229' }}>
         Agregar Usuario
       </DialogTitle>
       <DialogContent style={{ backgroundColor: '#1A2229', color: 'white' }}>
@@ -65,7 +65,7 @@ const AgregarUsuario = ({ open, onClose, onGuardar }) => {
           value={formData.name}
           onChange={handleChange}
           InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
+          InputProps={{ style: { color: 'white', border: '1px solid orange' } }}
         />
         <TextField
           margin="dense"
@@ -76,7 +76,7 @@ const AgregarUsuario = ({ open, onClose, onGuardar }) => {
           value={formData.email}
           onChange={handleChange}
           InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
+          InputProps={{ style: { color: 'white', border: '1px solid orange' } }}
         />
         <TextField
           margin="dense"
@@ -87,7 +87,7 @@ const AgregarUsuario = ({ open, onClose, onGuardar }) => {
           value={formData.password}
           onChange={handleChange}
           InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
+          InputProps={{ style: { color: 'white', border: '1px solid orange' } }}
         />
         <FormControl fullWidth margin="dense">
           <InputLabel style={{ color: 'white' }}>Rol</InputLabel>
@@ -95,13 +95,13 @@ const AgregarUsuario = ({ open, onClose, onGuardar }) => {
             name="rol"
             value={formData.rol}
             onChange={handleChange}
-            style={{ color: 'white', border: '1px solid aqua' }}
+            style={{ color: 'white', border: '1px solid orange' }}
           >
             {roles.map((r) => (
               <MenuItem
                 key={r.id}
                 value={r.id}
-                style={{ color: 'aqua', backgroundColor: '#1A2229' }}
+                style={{ color: 'orange', backgroundColor: '#1A2229' }}
               >
                 {r.rol}
               </MenuItem>

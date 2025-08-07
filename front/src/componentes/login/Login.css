@@ -1,90 +1,105 @@
-/* General reset for body and container */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Body styles */
+/* Fondo general */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
-    display: block;
-    min-height: 100vh; /* Make sure the body covers the full screen */
-    padding: 0;
+    background: linear-gradient(135deg, #3e2723, #4e342e, #c62828, #4e342e);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* Login container */
+/* Animación del fondo */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Caja de login */
 .login-container {
-    background-color: rgb(0, 0, 0);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     width: 100%;
-    max-width: 400px;
-    margin: 100px auto; /* This centers the login container without affecting the body */
+    max-width: 380px;
     text-align: center;
-    border : 1px solid #00FFFF;
-    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Icon styles */
+/* Icono principal */
 .login-container svg {
-    color: #ffffff; /* Color for the user icon */
+    color: #ff7043; /* naranja cálido */
+    font-size: 64px;
 }
 
-/* Title styles */
+/* Título */
 .login-container h2 {
-    font-size: 1.5rem;
-    margin: 20px 0;
-    color: #ffffff;
+    font-size: 1.8rem;
+    margin: 15px 0;
+    color: #fff3e0;
 }
 
-/* Form styling */
+/* Formulario */
 form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-/* Input fields */
+/* Inputs */
 input[type="text"],
 input[type="password"] {
     padding: 12px;
     font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #8d6e63;
+    background: #3e2723;
+    color: white;
+    border-radius: 6px;
     outline: none;
-    transition: border-color 0.3s;
+    transition: 0.3s;
 }
 
-/* Input focus styles */
+input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
 input[type="text"]:focus,
 input[type="password"]:focus {
-    border-color: #5c6bc0;
+    border-color: #ff7043;
+    box-shadow: 0 0 6px rgba(255, 112, 67, 0.7);
 }
 
-/* Submit button */
+/* Botón */
 button[type="submit"] {
     padding: 12px;
-    background-color: #5c6bc0;
+    background: linear-gradient(45deg, #c62828, #ff7043);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: 0.3s;
 }
 
-/* Button hover effect */
 button[type="submit"]:hover {
-    background-color: #3f51b5;
+    background: linear-gradient(45deg, #b71c1c, #f4511e);
+    transform: scale(1.02);
 }
 
-/* Responsive design for smaller screens */
+/* Responsive */
 @media (max-width: 480px) {
     .login-container {
-        padding: 15px;
+        padding: 20px;
         width: 90%;
     }
 }

@@ -1,7 +1,7 @@
 body {
-    background-color: #f6ac00;
-    color: white;
-    font-family: 'Arial', sans-serif; /* Aplica la fuente sans-serif */
+    background: linear-gradient(to bottom, #4e342e, #c62828, #f6ac00);
+    color: #f5f5f5;
+    font-family: 'Arial', sans-serif';
 }
 
 

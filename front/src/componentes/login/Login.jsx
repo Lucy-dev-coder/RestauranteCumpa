@@ -1,14 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUser } from 'react-icons/fa';
 import './Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
-  // Solo para actualizar el estado, sin ninguna acción
+  // Al montar el componente, revisa si hay datos guardados
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('username');
+    const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+
+    if (savedUsername && savedRememberMe) {
+      setUsername(savedUsername);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleLogin = (e) => {
     e.preventDefault();
+
+    // Guarda o borra el usuario según la opción "Recuérdame"
+    if (rememberMe) {
+      localStorage.setItem('username', username);
+      localStorage.setItem('rememberMe', 'true');
+    } else {
+      localStorage.removeItem('username');
+      localStorage.setItem('rememberMe', 'false');
+    }
+
+    // Aquí iría la lógica de autenticación real
+    console.log('Iniciando sesión...');
   };
 
   return (
@@ -21,13 +44,22 @@ const Login = () => {
           placeholder="Usuario"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-        /><br />
+        />
         <input
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        /><br />
+        />
+
+        <label style={{ fontSize: '14px' }}>
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          /> Recuérdame
+        </label>
+
         <button type="submit">Iniciar Sesión</button>
       </form>
     </div>

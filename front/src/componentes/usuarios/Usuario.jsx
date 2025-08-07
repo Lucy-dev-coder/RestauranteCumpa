@@ -92,7 +92,7 @@ const Usuario = () => {
 
   return (
     <>
-      <h1 style={{ textAlign: 'center', color: 'white' }}>Administración de Usuarios</h1>
+     <h1 className="usuario-title">Administración de Usuarios</h1>
 
       <UsuarioTable
         usuarios={usuarios}

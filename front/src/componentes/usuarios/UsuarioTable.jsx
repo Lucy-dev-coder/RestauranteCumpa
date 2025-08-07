@@ -4,6 +4,10 @@ import {
   TableHead, TableRow, Paper, TextField, TablePagination
 } from '@mui/material';
 import './Usuario.css'; // Asegúrate de mantener tus estilos
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,12 +34,14 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
     <Container maxWidth={false} style={{ padding: '20px' }}>
       <Button
         variant="contained"
-        color="success"
+        color="primary"
         onClick={onAgregar}
         style={{ padding: 10, marginBottom: 10 }}
+        startIcon={<AddIcon />}
       >
         Agregar Usuario
       </Button>
+
 
       <TextField
         fullWidth
@@ -44,7 +50,7 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         InputLabelProps={{ style: { color: 'white' } }}
-        InputProps={{ style: { color: 'white', border: '1px solid aqua' } }}
+        InputProps={{ style: { color: 'white', border: '1px solid orange' } }}
       />
 
       <TableContainer component={Paper} style={{ width: '100%' }}>
@@ -59,31 +65,59 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedUsuarios.map((usuario) => (
-              <TableRow key={usuario.id}>
-                <TableCell>{usuario.name}</TableCell>
-                <TableCell>{usuario.email}</TableCell>
-                <TableCell>{usuario.rol}</TableCell>
-                <TableCell>{usuario.estado}</TableCell>
-                <TableCell>
-                  <Button
-                    onClick={() => onEditar(usuario)}
-                    color="primary"
-                    variant="contained"
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    style={{ marginLeft: '10px' }}
-                    onClick={() => onEliminar(usuario.id)}
-                  >
-                    Eliminar
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {paginatedUsuarios.map((usuario) => {
+              console.log('Estado usuario:', usuario.estado);
+              return (
+                <TableRow key={usuario.id}>
+                  <TableCell>{usuario.name}</TableCell>
+                  <TableCell>{usuario.email}</TableCell>
+                  <TableCell>{usuario.rol}</TableCell>
+                  <TableCell>
+                    {(() => {
+                      const estadoTexto = usuario.estado === 'habilitado' ? 'Habilitado' : 'Deshabilitado';
+                      const bgColor = usuario.estado === 'habilitado' ? 'green' : 'crimson';
+                      return (
+                        <span
+                          style={{
+                            padding: '4px 10px',
+                            borderRadius: '20px',
+                            fontWeight: 'bold',
+                            color: 'white',
+                            backgroundColor: bgColor,
+                            textTransform: 'capitalize'
+                          }}
+                        >
+                          {estadoTexto}
+                        </span>
+                      );
+                    })()}
+                  </TableCell>
+
+
+
+                  <TableCell>
+                    <Button
+                      onClick={() => onEditar(usuario)}
+                      color="primary"
+                      variant="contained"
+                      startIcon={<EditIcon />}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      style={{ marginLeft: '10px' }}
+                      onClick={() => onEliminar(usuario.id)}
+                      startIcon={<DeleteIcon />}
+                    >
+                      Eliminar
+                    </Button>
+
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
-import { 
-  FaTachometerAlt, FaUsers, FaDollarSign, FaBox, FaClipboardList, FaFileInvoice, 
-  FaShoppingCart, FaTools, FaCog, FaLaptop, FaBars, FaUser, FaSignOutAlt, FaTags, FaCloudDownloadAlt 
+import {
+  FaTachometerAlt, FaUsers, FaDollarSign, FaBox, FaClipboardList, FaFileInvoice,
+  FaShoppingCart, FaTools, FaCog, FaBars, FaUser, FaSignOutAlt, FaTags, FaCloudDownloadAlt
 } from 'react-icons/fa';
+import { GiChickenOven } from 'react-icons/gi';
+
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,8 +54,10 @@ const Sidebar = () => {
 
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="logo-container">
-          <FaLaptop style={{ fontSize: '56px', marginBottom: '5px' }} />
-          <h1 style={{ margin: 0 }}>DROID-PC</h1>
+
+          <GiChickenOven style={{ fontSize: '56px', marginBottom: '5px' }} />
+
+          <h2 style={{ margin: 0 }}>El Cumpa</h2>
         </div>
         <hr />
         <br />
@@ -74,41 +78,8 @@ const Sidebar = () => {
                 <FaTags /> &nbsp;Categorias
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/producto" activeclassname="active" onClick={handleLinkClick}>
-                <FaBox /> &nbsp;Productos
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/cotizador" activeclassname="active" onClick={handleLinkClick}>
-                <FaClipboardList /> &nbsp;Cotizaciones/Ventas
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/registroCotizacion" activeclassname="active" onClick={handleLinkClick}>
-                <FaFileInvoice /> &nbsp;Registro de cotizaciones
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/registroVenta" activeclassname="active" onClick={handleLinkClick}>
-                <FaShoppingCart /> &nbsp;Registro de ventas
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/metodosPago" activeclassname="active" onClick={handleLinkClick}>
-                <FaDollarSign /> &nbsp;Metodos de pago
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/soporteTecnico" activeclassname="active" onClick={handleLinkClick}>
-                <FaTools /> &nbsp;Soporte Técnico
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/ajusteweb" activeclassname="active" onClick={handleLinkClick}>
-                <FaCog /> &nbsp;Ajustes de página
-              </NavLink>
-            </li>
+
+
             <li>
               <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>
                 <FaCloudDownloadAlt /> &nbsp;Backup
