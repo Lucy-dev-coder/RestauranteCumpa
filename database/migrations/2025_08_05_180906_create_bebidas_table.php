@@ -14,11 +14,6 @@ return new class extends Migration {
             $table->integer('stock')->default(0);
             $table->string('imagen', 255)->nullable();
             $table->boolean('estado')->default(true);
-             $table->unsignedBigInteger('categoria_id')->nullable();
-            $table->foreign('categoria_id')
-                ->references('id')
-                ->on('categorias')
-                ->onDelete('set null');
             $table->timestamps(); // Recomendado para tener fecha de creación y actualización
         });
     }

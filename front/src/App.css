@@ -51,3 +51,8 @@ body {
   margin-top: 80px;
   /* ajusta según el alto de tu top-navbar */
 }
+/* App.css o un CSS global */
+.main-content {
+  margin-left: 8%; /* Igual al ancho del sidebar */
+  width: 100%;
+}

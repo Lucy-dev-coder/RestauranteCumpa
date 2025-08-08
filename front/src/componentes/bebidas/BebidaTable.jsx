@@ -7,32 +7,21 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-// Ajusta esta URL base según dónde estén alojadas las imágenes en tu backend
 const URL_IMAGENES_BASE = 'http://localhost:8000/storage/';
 
-const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado }) => {
+const BebidaTable = ({ bebidas, onAgregar, onEditar, onEliminar, onToggleEstado }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
 
-  const filteredPlatos = platos.filter((p) =>
-    p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBebidas = bebidas.filter((b) =>
+    b.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const paginatedPlatos = filteredPlatos.slice(
+  const paginatedBebidas = filteredBebidas.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-  const toggleEstado = async (plato) => {
-    try {
-      await axiosAuth.put(`/platos/${plato.id}`, {
-        estado: !plato.estado // cambia el valor
-      });
-      fetchPlatos(); // vuelve a cargar los datos para ver el cambio
-    } catch (error) {
-      console.error("Error al cambiar estado", error);
-    }
-  };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
 
@@ -40,7 +29,6 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
 
   return (
     <Container maxWidth={false} style={{ padding: '20px' }}>
@@ -51,13 +39,13 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
         style={{ padding: 10, marginBottom: 10 }}
         startIcon={<AddIcon />}
       >
-        Agregar Plato
+        Agregar Bebida
       </Button>
 
       <TextField
         fullWidth
         margin="normal"
-        label="Buscar plato"
+        label="Buscar bebida"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         InputLabelProps={{ style: { color: 'white' } }}
@@ -69,46 +57,46 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Imagen</TableCell> {/* Nueva columna */}
+              <TableCell>Imagen</TableCell>
               <TableCell>Nombre</TableCell>
               <TableCell>Precio</TableCell>
-              <TableCell>Categoría</TableCell>
+              <TableCell>Stock</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {paginatedPlatos.length === 0 ? (
+            {paginatedBebidas.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} align="center">
-                  No hay platos
+                <TableCell colSpan={8} align="center">
+                  No hay bebidas
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedPlatos.map((plato) => (
-                <TableRow key={plato.id}>
-                  <TableCell>{plato.id}</TableCell>
+              paginatedBebidas.map((bebida) => (
+                <TableRow key={bebida.id}>
+                  <TableCell>{bebida.id}</TableCell>
                   <TableCell>
-                    {plato.imagen ? (
+                    {bebida.imagen ? (
                       <img
-                        src={`${URL_IMAGENES_BASE}${plato.imagen}`}
-                        alt={plato.nombre}
+                        src={`${URL_IMAGENES_BASE}${bebida.imagen}`}
+                        alt={bebida.nombre}
                         style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4 }}
                       />
                     ) : (
                       <span style={{ color: '#999' }}>Sin imagen</span>
                     )}
                   </TableCell>
-                  <TableCell>{plato.nombre}</TableCell>
-                  <TableCell>{Number(plato.precio).toFixed(2)}</TableCell>
-                  <TableCell>{plato.categoria ? plato.categoria.nombre : '-'}</TableCell>
+                  <TableCell>{bebida.nombre}</TableCell>
+                  <TableCell>{Number(bebida.precio).toFixed(2)}</TableCell>
+                  <TableCell>{bebida.stock ?? '-'}</TableCell>
                   <TableCell>
                     <button
-                      onClick={() => onToggleEstado(plato)}
+                      onClick={() => onToggleEstado(bebida)}
                       style={{
                         marginLeft: '8px',
-                        backgroundColor: plato.estado ? 'green' : 'crimson',
+                        backgroundColor: bebida.estado ? 'green' : 'crimson',
                         color: 'white',
                         padding: '4px 10px',
                         border: 'none',
@@ -116,14 +104,12 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
                         cursor: 'pointer'
                       }}
                     >
-                      {plato.estado ? 'Habilitado' : 'Deshabilitado'}
+                      {bebida.estado ? 'Habilitado' : 'Deshabilitado'}
                     </button>
                   </TableCell>
-
-
                   <TableCell>
                     <Button
-                      onClick={() => onEditar(plato)}
+                      onClick={() => onEditar(bebida)}
                       color="primary"
                       variant="contained"
                       startIcon={<EditIcon />}
@@ -134,12 +120,11 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
                       color="error"
                       variant="contained"
                       style={{ marginLeft: '10px' }}
-                      onClick={() => onEliminar(plato.id)}
+                      onClick={() => onEliminar(bebida.id)}
                       startIcon={<DeleteIcon />}
                     >
                       Eliminar
                     </Button>
-
                   </TableCell>
                 </TableRow>
               ))
@@ -151,7 +136,7 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
       <TablePagination
         rowsPerPageOptions={[6, 10, 25]}
         component="div"
-        count={filteredPlatos.length}
+        count={filteredBebidas.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -162,4 +147,4 @@ const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado })
   );
 };
 
-export default PlatoTable;
+export default BebidaTable;

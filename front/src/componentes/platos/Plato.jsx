@@ -52,7 +52,15 @@ const Plato = () => {
       });
       obtenerPlatos();
       handleCloseAgregar();
-      Swal.fire('Éxito', 'Plato agregado correctamente', 'success');
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Plato agregado correctamente',
+        showConfirmButton: false, // Oculta el botón OK
+        timer: 900,               // Tiempo en ms para que desaparezca solo
+        timerProgressBar: true,   // Opcional: barra de progreso de tiempo
+      });
+
     } catch (err) {
       Swal.fire('Error', 'No se pudo agregar el plato: ' + err.message, 'error');
     }
@@ -66,7 +74,15 @@ const Plato = () => {
       });
       obtenerPlatos();
       handleCloseEditar();
-      Swal.fire('Éxito', 'Plato actualizado correctamente', 'success');
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Plato actualizado correctamente',
+        showConfirmButton: false,
+        timer: 900,
+        timerProgressBar: true,
+      });
+
     } catch (err) {
       Swal.fire('Error', 'No se pudo actualizar el plato: ' + err.message, 'error');
     }
@@ -89,13 +105,41 @@ const Plato = () => {
       try {
         await axiosAuth.delete(`/platos/${id}`);
         obtenerPlatos();
-        Swal.fire('Eliminado', 'El plato ha sido eliminado.', 'success');
+        Swal.fire({
+          icon: 'success',
+          title: 'Eliminado',
+          text: 'El plato ha sido eliminado.',
+          showConfirmButton: false,
+          timer: 900,
+          timerProgressBar: true,
+        });
+
       } catch (err) {
         Swal.fire('Error', 'No se pudo eliminar el plato', 'error');
       }
     }
   };
 
+  // Cambiar estado habilitado/deshabilitado
+  const toggleEstadoPlato = async (plato) => {
+    try {
+      await axiosAuth.put(`/platos/${plato.id}`, {
+        estado: !plato.estado
+      });
+      obtenerPlatos();
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: `Plato ${!plato.estado ? 'habilitado' : 'deshabilitado'} correctamente`,
+        showConfirmButton: false,
+        timer: 900,
+        timerProgressBar: true,
+      });
+
+    } catch (err) {
+      Swal.fire('Error', 'No se pudo cambiar el estado del plato', 'error');
+    }
+  };
   return (
     <>
       <h1 className="titulos">Administración de Platos</h1>
@@ -108,6 +152,7 @@ const Plato = () => {
             onAgregar={handleOpenAgregar}
             onEditar={handleOpenEditar}
             onEliminar={eliminarPlato}
+            onToggleEstado={toggleEstadoPlato} // 👈 aquí
           />
 
           <AgregarPlato

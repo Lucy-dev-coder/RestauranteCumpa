@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Storage;
 class BebidaController extends Controller
 {
     /**
-     * Listar todas las bebidas (con categoría si existe relación).
+     * Listar todas las bebidas.
      */
     public function index()
     {
-        $bebidas = Bebida::with('categoria')->get();
+        $bebidas = Bebida::all();
         return response()->json($bebidas);
     }
 
@@ -23,15 +23,14 @@ class BebidaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'       => 'required|string|max:30',
-            'precio'       => 'required|numeric|min:0',
-            'stock'        => 'nullable|integer|min:0',
-            'estado'       => 'boolean',
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'nombre'  => 'required|string|max:30',
+            'precio'  => 'required|numeric|min:0',
+            'stock'   => 'nullable|integer|min:0',
+            'estado'  => 'required|boolean',
+            'imagen'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $data = $request->only(['nombre', 'precio', 'stock', 'estado', 'categoria_id']);
+        $data = $request->only(['nombre', 'precio', 'stock', 'estado']);
 
         if ($request->hasFile('imagen')) {
             $data['imagen'] = $request->file('imagen')->store('bebidas', 'public');
@@ -43,11 +42,11 @@ class BebidaController extends Controller
     }
 
     /**
-     * Mostrar una bebida específica (con categoría).
+     * Mostrar una bebida específica.
      */
     public function show(Bebida $bebida)
     {
-        return response()->json($bebida->load('categoria'));
+        return response()->json($bebida);
     }
 
     /**
@@ -56,18 +55,16 @@ class BebidaController extends Controller
     public function update(Request $request, Bebida $bebida)
     {
         $request->validate([
-            'nombre'       => 'sometimes|required|string|max:30',
-            'precio'       => 'sometimes|required|numeric|min:0',
-            'stock'        => 'nullable|integer|min:0',
-            'estado'       => 'boolean',
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'nombre'  => 'sometimes|required|string|max:30',
+            'precio'  => 'sometimes|required|numeric|min:0',
+            'stock'   => 'nullable|integer|min:0',
+            'estado'  => 'boolean',
+            'imagen'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $data = $request->only(['nombre', 'precio', 'stock', 'estado', 'categoria_id']);
+        $data = $request->only(['nombre', 'precio', 'stock', 'estado']);
 
         if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior si existe
             if ($bebida->imagen && Storage::disk('public')->exists($bebida->imagen)) {
                 Storage::disk('public')->delete($bebida->imagen);
             }

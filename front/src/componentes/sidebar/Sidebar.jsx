@@ -102,6 +102,11 @@ const [loading, setLoading] = useState(false);
                 <GiChickenOven /> &nbsp;Platos
               </NavLink>
             </li>
+              <li>
+              <NavLink to="/bebida" activeclassname="active" onClick={handleLinkClick}>
+                <GiChickenOven /> &nbsp;Bebidas
+              </NavLink>
+            </li>
             <li>
               <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>
                 <FaCloudDownloadAlt /> &nbsp;Backup

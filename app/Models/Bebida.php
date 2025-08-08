@@ -16,6 +16,6 @@ class Bebida extends Model
         'stock',
         'imagen',
         'estado',
-        'categoria_id',
     ];
+
 }
