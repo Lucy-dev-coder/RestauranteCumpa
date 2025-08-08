@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 import {
-  FaTachometerAlt, FaUsers, FaDollarSign, FaBox, FaClipboardList, FaFileInvoice,
-  FaShoppingCart, FaTools, FaCog, FaBars, FaUser, FaSignOutAlt, FaTags, FaCloudDownloadAlt
+  FaTachometerAlt, FaUsers, FaTags, FaCloudDownloadAlt,
+  FaBars, FaUser, FaSignOutAlt
 } from 'react-icons/fa';
 import { GiChickenOven } from 'react-icons/gi';
-
+import Swal from 'sweetalert2';
+import axiosAuth from '../../api/axiosConfig'; // Ajusta la ruta según tu estructura
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -38,6 +40,20 @@ const Sidebar = () => {
     }
   };
 
+  const handleLogout = async () => {
+  setLoading(true);
+  try {
+    await axiosAuth.post('/logout');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  } catch (error) {
+    Swal.fire('Error', 'No se pudo cerrar sesión', 'error');
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <div className="container">
       <div className="top-navbar">
@@ -46,7 +62,12 @@ const Sidebar = () => {
           <FaUser className="navbar-icon" />
           <span className="user-text">Rol: Usuario</span>
         </div>
-        <div className="logout-info">
+        <div
+          className="logout-info"
+          onClick={handleLogout}
+          style={{ cursor: 'pointer' }}
+          title="Cerrar sesión"
+        >
           <FaSignOutAlt className="navbar-icon" />
           <span className="logout-text">Cerrar sesión</span>
         </div>
@@ -54,9 +75,7 @@ const Sidebar = () => {
 
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="logo-container">
-
           <GiChickenOven style={{ fontSize: '56px', marginBottom: '5px' }} />
-
           <h2 style={{ margin: 0 }}>El Cumpa</h2>
         </div>
         <hr />
@@ -78,8 +97,6 @@ const Sidebar = () => {
                 <FaTags /> &nbsp;Categorias
               </NavLink>
             </li>
-
-
             <li>
               <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>
                 <FaCloudDownloadAlt /> &nbsp;Backup

@@ -3,22 +3,23 @@ import {
   Container, Button, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, TextField, TablePagination
 } from '@mui/material';
-//import './Usuario.css'; // Asegúrate de mantener tus estilos
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
+const CategoriaTable = ({ categorias, onAgregar, onEditar, onEliminar }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
 
-  const filteredUsuarios = usuarios.filter((u) =>
-    u.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filtrar categorías por nombre
+  const filteredCategorias = categorias.filter((c) =>
+    c.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const paginatedUsuarios = filteredUsuarios.slice(
+  // Paginación
+  const paginatedCategorias = filteredCategorias.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
@@ -39,14 +40,13 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
         style={{ padding: 10, marginBottom: 10 }}
         startIcon={<AddIcon />}
       >
-        Agregar Usuario
+        Agregar Categoría
       </Button>
-
 
       <TextField
         fullWidth
         margin="normal"
-        label="Buscar usuario"
+        label="Buscar categoría"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         InputLabelProps={{ style: { color: 'white' } }}
@@ -57,47 +57,28 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
         <Table className="table bgdark" style={{ width: '100%' }}>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Nombre</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Rol</TableCell>
-              <TableCell>Estado</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
-            {paginatedUsuarios.map((usuario) => {
-              console.log('Estado usuario:', usuario.estado);
-              return (
-                <TableRow key={usuario.id}>
-                  <TableCell>{usuario.name}</TableCell>
-                  <TableCell>{usuario.email}</TableCell>
-                  <TableCell>{usuario.rol}</TableCell>
-                  <TableCell>
-                    {(() => {
-                      const estadoTexto = usuario.estado === 'habilitado' ? 'Habilitado' : 'Deshabilitado';
-                      const bgColor = usuario.estado === 'habilitado' ? 'green' : 'crimson';
-                      return (
-                        <span
-                          style={{
-                            padding: '4px 10px',
-                            borderRadius: '20px',
-                            fontWeight: 'bold',
-                            color: 'white',
-                            backgroundColor: bgColor,
-                            textTransform: 'capitalize'
-                          }}
-                        >
-                          {estadoTexto}
-                        </span>
-                      );
-                    })()}
-                  </TableCell>
-
-
+            {paginatedCategorias.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center">
+                  No hay categorías
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginatedCategorias.map((categoria) => (
+                <TableRow key={categoria.id}>
+                  <TableCell>{categoria.id}</TableCell>
+                  <TableCell>{categoria.nombre}</TableCell>
 
                   <TableCell>
                     <Button
-                      onClick={() => onEditar(usuario)}
+                      onClick={() => onEditar(categoria)}
                       color="primary"
                       variant="contained"
                       startIcon={<EditIcon />}
@@ -108,16 +89,15 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
                       color="error"
                       variant="contained"
                       style={{ marginLeft: '10px' }}
-                      onClick={() => onEliminar(usuario.id)}
+                      onClick={() => onEliminar(categoria.id)}
                       startIcon={<DeleteIcon />}
                     >
                       Eliminar
                     </Button>
-
                   </TableCell>
                 </TableRow>
-              )
-            })}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -125,7 +105,7 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
       <TablePagination
         rowsPerPageOptions={[6, 10, 25]}
         component="div"
-        count={filteredUsuarios.length}
+        count={filteredCategorias.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -136,4 +116,4 @@ const UsuarioTable = ({ usuarios, onAgregar, onEditar, onEliminar }) => {
   );
 };
 
-export default UsuarioTable;
+export default CategoriaTable;

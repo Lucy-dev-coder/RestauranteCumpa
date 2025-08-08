@@ -5,6 +5,7 @@ import Login from './componentes/login/Login';
 import Usuario from './componentes/usuarios/Usuario';
 import Sidebar from './componentes/sidebar/Sidebar';
 import './App.css';
+import Categoria from './componentes/categorias/categoria'; // ajusta según tu estructura real
 
 function App() {
   return (
@@ -17,8 +18,6 @@ function App() {
 // Componente que maneja la lógica de mostrar u ocultar el sidebar
 function MainLayout() {
   const location = useLocation();
-  
-  // Si estás en login (ruta "/"), ocultamos el sidebar
   const isLoginPage = location.pathname === "/";
 
   return (
@@ -29,6 +28,7 @@ function MainLayout() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/usuario" element={<Usuario />} />
+          <Route path="/categoria" element={<Categoria />} /> {/* <-- aquí */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
