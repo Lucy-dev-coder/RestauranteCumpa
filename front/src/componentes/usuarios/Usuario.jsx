@@ -6,7 +6,7 @@ import UsuarioTable from './UsuarioTable';
 import AgregarUsuario from './AgregarUsuario';
 import EditarUsuario from './EditarUsuario';
 import axiosAuth from '../../api/axiosConfig';
-import Spinner from '../../componentes/Spinner';
+import Spinner from '../../componentes/spinner/Spinner';
 
 const Usuario = () => {
   const [loading, setLoading] = useState(false);

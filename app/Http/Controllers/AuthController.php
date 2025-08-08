@@ -27,7 +27,12 @@ class AuthController extends Controller
                 'email' => ['Las credenciales son incorrectas.'],
             ]);
         }
-
+        // Verificar si el usuario está habilitado
+        if ($user->estado !== 'habilitado') {
+            throw ValidationException::withMessages([
+                'email' => ['El usuario está deshabilitado. Contacte al administrador.'],
+            ]);
+        }
         // Crear token personal
         $token = $user->createToken('auth_token')->plainTextToken;
 

@@ -5,7 +5,8 @@ import Login from './componentes/login/Login';
 import Usuario from './componentes/usuarios/Usuario';
 import Sidebar from './componentes/sidebar/Sidebar';
 import './App.css';
-import Categoria from './componentes/categorias/categoria'; // ajusta según tu estructura real
+import Categoria from './componentes/categorias/categoria';
+import Plato from './componentes/platos/Plato';
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function MainLayout() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/usuario" element={<Usuario />} />
-          <Route path="/categoria" element={<Categoria />} /> {/* <-- aquí */}
+          <Route path="/categoria" element={<Categoria />} /> 
+          <Route path="/plato" element={<Plato />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

@@ -6,7 +6,7 @@ import CategoriaTable from './CategoriaTable';
 import AgregarCategoria from './AgregarCategoria';
 import EditarCategoria from './EditarCategoria';
 import axiosAuth from '../../api/axiosConfig';
-import Spinner from '../../componentes/Spinner';
+import Spinner from '../../componentes/spinner/Spinner';
 
 const Categoria = () => {
   const [loading, setLoading] = useState(false);

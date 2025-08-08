@@ -14,8 +14,8 @@ body {
 }
 /* fondo de sweetalert2*/
 .swal2-popup {
-    background-color: #333333 !important; /* Fondo del modal */
-    color: #ffffff !important;           /* Color del texto */
+    background-color: #333333 !important;
+    color: #ffffff !important;         
 }
 
 

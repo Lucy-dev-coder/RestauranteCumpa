@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('nombre', 30);
             $table->decimal('precio', 10, 2);
             $table->string('imagen', 255)->nullable();
-            $table->boolean('disponible')->default(true);
+            $table->boolean('estado')->default(true);
 
             $table->unsignedBigInteger('categoria_id')->nullable();
             $table->foreign('categoria_id')

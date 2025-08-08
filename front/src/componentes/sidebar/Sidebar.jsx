@@ -98,6 +98,11 @@ const [loading, setLoading] = useState(false);
               </NavLink>
             </li>
             <li>
+              <NavLink to="/plato" activeclassname="active" onClick={handleLinkClick}>
+                <GiChickenOven /> &nbsp;Platos
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>
                 <FaCloudDownloadAlt /> &nbsp;Backup
               </NavLink>

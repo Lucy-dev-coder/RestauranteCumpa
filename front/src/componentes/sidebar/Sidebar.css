@@ -54,7 +54,7 @@
 
 /* Activo */
 .nav-links ul li a.active {
-    background-color: #c62828; /* rojo parrilla */
+    background-color: #212121; /* rojo parrilla */
     color: #fff;
     border-radius: 5px;
 }
