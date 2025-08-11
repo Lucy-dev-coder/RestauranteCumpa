@@ -18,11 +18,17 @@ return new class extends Migration {
                 ->onDelete('restrict');
 
             // Bebida relacionada
-           $table->string('bebida', 100);
+            $table->string('bebida', 100);
+            
+            $table->unsignedBigInteger('bebida_id');
+            $table->foreign('bebida_id')
+                ->references('id')
+                ->on('bebidas')
+                ->onDelete('restrict');
 
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 10, 2);
-           
+
 
             $table->timestamps();
         });

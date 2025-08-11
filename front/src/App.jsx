@@ -7,6 +7,9 @@ import './App.css';
 import Categoria from './componentes/categorias/categoria';
 import Plato from './componentes/platos/Plato';
 import Bebida from './componentes/bebidas/Bebidas';
+import Caja from './componentes/caja/Caja';
+import Ventas from './componentes/ventas/Venta';
+
 function App() {
   return (
     <Router>
@@ -32,6 +35,8 @@ function MainLayout() {
           <Route path="/categoria" element={<Categoria />} />
           <Route path="/plato" element={<Plato />} />
           <Route path="/bebida" element={<Bebida />} />
+          <Route path="/caja" element={<Caja />} />
+          <Route path="/ventas" element={<Ventas />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

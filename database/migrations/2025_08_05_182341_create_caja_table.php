@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->dateTime('fecha_cierre')->nullable();
             $table->decimal('monto_apertura', 10, 2);
             $table->decimal('monto_cierre', 10, 2)->nullable();
+             $table->decimal('monto_esperado', 10, 2)->nullable();
             $table->enum('estado', ['abierta', 'cerrada'])->default('abierta');
             $table->text('observaciones')->nullable();
 

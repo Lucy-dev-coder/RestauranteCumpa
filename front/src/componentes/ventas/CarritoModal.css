@@ -1,0 +1,182 @@
+.carrito-modal-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrito-modal-container {
+    background: #2d3748;
+    width: 420px;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.carrito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+     background: linear-gradient(45deg, #b71c1cc8, #f4501ebf);
+    color: white;
+}
+
+.carrito-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.carrito-header-icon {
+    font-size: 28px;
+}
+
+.carrito-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.carrito-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.carrito-close-btn {
+    color: rgb(255, 255, 255);
+}
+
+.carrito-body {
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.carrito-empty {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.carrito-empty-icon {
+    font-size: 2.5rem;
+    display: block;
+}
+
+.carrito-empty-title {
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.carrito-empty-subtitle {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.carrito-productos-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.productos-icon {
+    color: #1976d2;
+}
+
+.carrito-productos-list {
+    background: #7f9ccd28 !important;
+    border-radius: 8px;
+}
+
+.carrito-producto-item {
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+.producto-nombre {
+    font-weight: 20;
+}
+
+
+.total-divider {
+    margin: 12px 0;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.total-label {
+    font-size: 16px;
+}
+
+
+.carrito-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.confirmar-btn {
+    margin-top: 16px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+}
+/*metodo de pago*/
+.pago-select .MuiOutlinedInput-root fieldset {
+  border-color: #a9742c;
+}
+
+.pago-select .MuiOutlinedInput-root:hover fieldset {
+  border-color: #d7a02a;
+}
+
+.pago-select .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #ff6f00;
+}
+
+.pago-select .MuiInputLabel-root {
+  color: #f5e1a4;
+}
+
+.pago-select .MuiInputLabel-root.Mui-focused {
+  color: #ff6f00;
+}
+
+.pago-select .MuiSelect-select {
+  color: #ffffff;
+}
+/* NUMERO DE MESA */
+.mesa-input .MuiOutlinedInput-root fieldset {
+  border-color: #c06f23; /* color del borde */
+}
+
+.mesa-input .MuiOutlinedInput-root:hover fieldset {
+  border-color: #e09f3e; /* borde al pasar el mouse */
+}
+
+.mesa-input .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #b56300; /* borde cuando el input está activo/focado */
+}
+
+.mesa-input .MuiInputLabel-root {
+  color: #f0e6d2; /* color del label */
+}
+
+.mesa-input .MuiInputLabel-root.Mui-focused {
+  color: #b56300; /* color del label cuando está enfocado */
+}
+
+.mesa-input .MuiInputBase-input {
+  color: #f0e6d2; /* color del texto que escribes */
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: transparent; /* fondo si quieres */
+}
