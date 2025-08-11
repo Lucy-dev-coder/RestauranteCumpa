@@ -17,6 +17,7 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import axios from 'axios';
 import './CarritoModal.css';
 import axiosAuth from '../../api/axiosConfig';
+import Swal from 'sweetalert2';
 export default function CarritoModal({
   open,
   onClose,
@@ -34,7 +35,7 @@ export default function CarritoModal({
   const total = carrito.reduce((acc, item) => acc + (item.precio * (item.cantidad || 0)), 0);
   const totalItems = carrito.reduce((acc, item) => acc + (item.cantidad || 0), 0);
 
-  const handleConfirmarPedido = async () => {
+   const handleConfirmarPedido = async () => {
     if (!mesa) {
       setError('Por favor, ingresa el número de mesa.');
       return;
@@ -59,9 +60,16 @@ export default function CarritoModal({
         })),
       };
 
-     
-const response = await axiosAuth.post('/ventas', payload);
+      const response = await axiosAuth.post('/ventas', payload);
       console.log('Venta registrada:', response.data);
+
+      // SweetAlert de confirmación rápida
+      Swal.fire({
+        icon: 'success',
+        title: 'Pedido confirmado',
+        showConfirmButton: false,
+        timer: 800
+      });
 
       // Limpiar carrito y cerrar modal
       limpiarCarrito();
@@ -76,6 +84,7 @@ const response = await axiosAuth.post('/ventas', payload);
       setLoadingEnvio(false);
     }
   };
+
 
   return (
     <Modal open={open} onClose={onClose} className="carrito-modal-overlay">

@@ -16,7 +16,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import axiosAuth from '../../api/axiosConfig';
 import CarritoModal from './CarritoModal';
 import './Ventas.css';
-import Spinner from '../../componentes/spinner/Spinner'; 
+import Spinner from '../../componentes/spinner/Spinner';
 
 const BASE_URL_STORAGE = 'http://localhost:8000/storage/';
 
@@ -31,7 +31,7 @@ export default function Ventas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
- useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -73,14 +73,31 @@ export default function Ventas() {
   };
 
   const eliminarDelCarrito = (producto) => {
-    setCarrito(prev => prev.filter(item => !(item.id === producto.id && item.tipo === producto.tipo)));
+  // Quita el producto del carrito
+  setCarrito(prev =>
+    prev.filter(item => !(item.id === producto.id && item.tipo === producto.tipo))
+  );
 
-    if (producto.tipo === 'plato') {
-      setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, cantidad: '', observacion: '' } : p));
-    } else {
-      setBebidas(prev => prev.map(b => b.id === producto.id ? { ...b, cantidad: '' } : b));
-    }
-  };
+  // Resetea en la lista de platos o bebidas
+  if (producto.tipo === 'plato') {
+    setPlatos(prev =>
+      prev.map(p =>
+        p.id === producto.id
+          ? { ...p, cantidad: '', observacion: '' }
+          : p
+      )
+    );
+  } else if (producto.tipo === 'bebida') {
+    setBebidas(prev =>
+      prev.map(b =>
+        b.id === producto.id
+          ? { ...b, cantidad: '' }
+          : b
+      )
+    );
+  }
+};
+
 
   // Filtrado combinado para buscador y categorías
   const productosFiltrados = () => {
@@ -165,7 +182,7 @@ export default function Ventas() {
           inputProps={{ min: 0 }}
           className="cantidad-input"
         />
-        
+
         {/* Solo mostrar observación en platos */}
         {tipo === 'plato' && (
           <TextField
@@ -191,30 +208,30 @@ export default function Ventas() {
   );
 
   return (
-  <>
-    {loading ? (
-      <Box className="loading-container">
-        <Spinner />
-      </Box>
-    ) : (
-      <>
-        {/* Header mejorado */}
-        <Typography className="ventas-title">
-          Sistema de Ventas
-        </Typography>
+    <>
+      {loading ? (
+        <Box className="loading-container">
+          <Spinner />
+        </Box>
+      ) : (
+        <>
+          {/* Header mejorado */}
+          <Typography className="ventas-title">
+            Sistema de Ventas
+          </Typography>
 
-        <Tabs
-          value={tabValue}
-          onChange={handleChangeTab}
-          centered
-          className="ventas-tabs"
-        >
-          <Tab label="🍽️ Platos" className="ventas-tab" />
-          <Tab label="🥤 Bebidas" className="ventas-tab" />
-        </Tabs>
+          <Tabs
+            value={tabValue}
+            onChange={handleChangeTab}
+            centered
+            className="ventas-tabs"
+          >
+            <Tab label="🍽️ Platos" className="ventas-tab" />
+            <Tab label="🥤 Bebidas" className="ventas-tab" />
+          </Tabs>
 
-        {/* Controles de filtro mejorados */}
-        
+          {/* Controles de filtro mejorados */}
+
           <Box className="controles-flex">
             <TextField
               fullWidth
@@ -271,52 +288,57 @@ export default function Ventas() {
               </Box>
             )}
           </Box>
-        
 
-        {/* Grid de productos */}
-        <Box className={tabValue === 0 ? "grid-platos" : "grid-bebidas"}>
-          {productosFiltrados().map((item) =>
-            renderProducto(item, tabValue === 0 ? "plato" : "bebida")
-          )}
-        </Box>
 
-        {/* Estado vacío mejorado */}
-        {productosFiltrados().length === 0 && (
-          <Box className="empty-state">
-            <Box className="empty-icon">🔍</Box>
-            <Typography className="empty-title">
-              No se encontraron productos
-            </Typography>
-            <Typography className="empty-subtitle">
-              Intenta con otros términos de búsqueda o ajusta los filtros
-            </Typography>
+          {/* Grid de productos */}
+          <Box className={tabValue === 0 ? "grid-platos" : "grid-bebidas"}>
+            {productosFiltrados().map((item) =>
+              renderProducto(item, tabValue === 0 ? "plato" : "bebida")
+            )}
           </Box>
-        )}
 
-        {/* Botón carrito flotante mejorado */}
-        <IconButton
-          color="primary"
-          className="boton-carrito-flotante"
-          onClick={() => setModalOpen(true)}
-        >
-          <ShoppingCartIcon />
-          {carrito.length > 0 && (
-            <Box component="span" className="badge-carrito">
-              {carrito.reduce((acc, p) => acc + (p.cantidad || 0), 0)}
+          {/* Estado vacío mejorado */}
+          {productosFiltrados().length === 0 && (
+            <Box className="empty-state">
+              <Box className="empty-icon">🔍</Box>
+              <Typography className="empty-title">
+                No se encontraron productos
+              </Typography>
+              <Typography className="empty-subtitle">
+                Intenta con otros términos de búsqueda o ajusta los filtros
+              </Typography>
             </Box>
           )}
-        </IconButton>
 
-        <CarritoModal
-  open={modalOpen}
-  onClose={() => setModalOpen(false)}
-  carrito={carrito}
-  eliminarDelCarrito={eliminarDelCarrito}
-  limpiarCarrito={() => setCarrito([])}  // nueva prop
-/>
+          {/* Botón carrito flotante mejorado */}
+          <IconButton
+            color="primary"
+            className="boton-carrito-flotante"
+            onClick={() => setModalOpen(true)}
+          >
+            <ShoppingCartIcon />
+            {carrito.length > 0 && (
+              <Box component="span" className="badge-carrito">
+                {carrito.reduce((acc, p) => acc + (p.cantidad || 0), 0)}
+              </Box>
+            )}
+          </IconButton>
 
-      </>
-    )}
-  </>
-);
+          <CarritoModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            carrito={carrito}
+            eliminarDelCarrito={eliminarDelCarrito}
+            limpiarCarrito={() => {
+              setCarrito([]);
+              setPlatos(prev => prev.map(p => ({ ...p, cantidad: '', observacion: '' })));
+              setBebidas(prev => prev.map(b => ({ ...b, cantidad: '' })));
+            }}
+          />
+
+
+        </>
+      )}
+    </>
+  );
 };
