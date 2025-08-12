@@ -17,6 +17,7 @@ const CajaTable = ({
     onIngreso,
     onEgreso,
     onVerDetalles,
+    userRole,
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(0);
@@ -85,7 +86,6 @@ const CajaTable = ({
                             <TableCell>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
-
                     <TableBody>
                         {paginatedCajas.length === 0 ? (
                             <TableRow>
@@ -105,10 +105,8 @@ const CajaTable = ({
                                             <span style={{ color: 'white', borderRadius: '50%', backgroundColor: 'green' }}>A</span>: {formatDate(caja.fecha_apertura)}<br />
                                             <span style={{ color: 'white', borderRadius: '50%', backgroundColor: 'red' }}>C</span>: {formatDate(caja.fecha_cierre)}
                                         </TableCell>
-
                                         <TableCell>{caja.monto_cierre ?? '-'} Bs.</TableCell>
                                         <TableCell>{caja.monto_esperado ?? '-'} Bs.</TableCell>
-
                                         <TableCell>{caja.observaciones ?? '-'}</TableCell>
                                         <TableCell
                                             style={{
@@ -171,26 +169,25 @@ const CajaTable = ({
                                                         </Button>
                                                     </>
                                                 )}
-                                                <Button
-                                                    onClick={() => onVerDetalles(caja)}
-                                                    color="info"
-                                                    variant="outlined"
-                                                    title="Ver detalles"
-                                                    size="small"
-                                                    style={{ minWidth: 0, marginRight: 8 }}
-                                                >
-                                                    <VisibilityIcon />
-                                                </Button>
+                                                {userRole === 'admin' && (
+                                                    <Button
+                                                        onClick={() => onVerDetalles(caja)}
+                                                        color="info"
+                                                        variant="outlined"
+                                                        title="Ver detalles"
+                                                        size="small"
+                                                        style={{ minWidth: 0, marginRight: 8 }}
+                                                    >
+                                                        <VisibilityIcon />
+                                                    </Button>
+                                                )}
                                             </div>
                                         </TableCell>
-
-
                                     </TableRow>
                                 );
                             })
                         )}
                     </TableBody>
-
                 </Table>
             </TableContainer>
 
