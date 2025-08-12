@@ -34,15 +34,12 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Usamos axiosAuth con baseURL
       const res = await axiosAuth.post('/login', {
         email: username,
         password: password,
       });
 
       localStorage.setItem('token', res.data.access_token);
-
-      // Guardar el usuario completo para usar luego
       localStorage.setItem('usuario', JSON.stringify(res.data.user));
 
       if (rememberMe) {
@@ -53,7 +50,16 @@ const Login = () => {
         localStorage.setItem('rememberMe', 'false');
       }
 
-      navigate('/usuario');  // o la ruta que uses para la página protegida
+      // Aquí la redirección según rol
+      if (res.data.user.rol === 'cajero') {
+        navigate('/caja');
+      } else if (res.data.user.rol === 'admin') {
+        navigate('/usuario'); // o dashboard, lo que uses para admin
+      } else {
+        // Para otros roles, si hay, o redirigir a login con mensaje
+        navigate('/login');
+        Swal.fire('Acceso Denegado', 'No tienes permisos para acceder', 'error');
+      }
     } catch (error) {
       Swal.fire(
         'Error',
@@ -64,6 +70,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
 
 
   return (

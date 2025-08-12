@@ -1,65 +1,52 @@
-import React, { useState, useEffect, use } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import {
   FaTachometerAlt, FaUsers, FaTags, FaCloudDownloadAlt,
-  FaBars, FaUser, FaSignOutAlt
+  FaBars, FaUser, FaSignOutAlt, FaCashRegister,
+  FaGlassCheers, FaShoppingCart
 } from 'react-icons/fa';
-import { FaCashRegister } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import { GiChickenOven } from 'react-icons/gi';
 import Swal from 'sweetalert2';
-import axiosAuth from '../../api/axiosConfig'; // Ajusta la ruta según tu estructura
+import axiosAuth from '../../api/axiosConfig';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [token, setToken] = useState('');
+  const [usuario, setUsuario] = useState(null);
+
   useEffect(() => {
     const checkIsMobile = () => {
-      const mobileCheck = window.innerWidth < 768;
-      setIsMobile(mobileCheck);
-      setIsOpen(!mobileCheck); // Sidebar abierto en PC, cerrado en móvil
+      setIsMobile(window.innerWidth < 768);
+      setIsOpen(window.innerWidth >= 768); // abierto en PC, cerrado móvil
     };
-
     checkIsMobile();
-
     window.addEventListener('resize', checkIsMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkIsMobile);
-    };
+    return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
-  useEffect(() => {
-    const t = localStorage.getItem('token');
-    setToken(t);
 
-    // Si quieres redirigir si no hay token:
-    if (!t) {
-      navigate('/'); // o ruta login
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userStorage = localStorage.getItem('usuario');
+    if (!token || !userStorage) {
+      navigate('/'); // redirigir si no está autenticado
+      return;
     }
+    setUsuario(JSON.parse(userStorage));
   }, [navigate]);
 
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleLinkClick = () => {
-    if (isMobile) {
-      setIsOpen(false);
-    }
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const handleLinkClick = () => { if (isMobile) setIsOpen(false); };
 
   const handleLogout = async () => {
     setLoading(true);
     try {
       await axiosAuth.post('/logout');
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      navigate('/'); // redirige sin recargar
+      localStorage.removeItem('usuario');
+      navigate('/login');
     } catch (error) {
       Swal.fire('Error', 'No se pudo cerrar sesión', 'error');
     } finally {
@@ -67,14 +54,20 @@ const Sidebar = () => {
     }
   };
 
+  if (!usuario) return null; // O spinner mientras carga
+
+  // Mostrar links según rol
+  const isAdmin = usuario.rol === 'admin';
+  const isCajero = usuario.rol === 'cajero';
 
   return (
     <div className="container">
       <div className="top-navbar">
         <FaBars className="navbar-icon" onClick={toggleSidebar} />
         <div className="user-info">
+          <span className="user-text">User: {usuario.name}</span>&nbsp;
           <FaUser className="navbar-icon" />
-          <span className="user-text">Rol: Usuario</span>
+          <span className="user-text">Rol: {usuario.rol}</span>
         </div>
         <div
           className="logout-info"
@@ -83,7 +76,7 @@ const Sidebar = () => {
           title="Cerrar sesión"
         >
           <FaSignOutAlt className="navbar-icon" />
-          <span className="logout-text">Cerrar sesión</span>
+          <span className="logout-text">{loading ? 'Cerrando...' : 'Cerrar sesión'}</span>
         </div>
       </div>
 
@@ -96,47 +89,60 @@ const Sidebar = () => {
         <br />
         <nav className="nav-links">
           <ul>
-            <li>
-              <NavLink to="/dashboard" exact="true" activeclassname="active" onClick={handleLinkClick}>
-                <FaTachometerAlt /> &nbsp;Dashboard
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/usuario" activeclassname="active" onClick={handleLinkClick}>
-                <FaUsers /> &nbsp;Usuarios
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/categoria" activeclassname="active" onClick={handleLinkClick}>
-                <FaTags /> &nbsp;Categorias
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/plato" activeclassname="active" onClick={handleLinkClick}>
-                <GiChickenOven /> &nbsp;Platos
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/bebida" activeclassname="active" onClick={handleLinkClick}>
-                <GiChickenOven /> &nbsp;Bebidas
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/caja" activeclassname="active" onClick={handleLinkClick}>
-                <FaCashRegister /> &nbsp;Caja
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/ventas" activeclassname="active" onClick={handleLinkClick}>
-                <FaCashRegister /> &nbsp; Ventas
-              </NavLink>
+            {isAdmin && (
+              <>
+                {/* <li>
+                  <NavLink to="/dashboard" exact="true" activeclassname="active" onClick={handleLinkClick}>
+                    <FaTachometerAlt /> &nbsp;Dashboard
+                  </NavLink>
+                </li> */}
 
-            </li>
-            <li>
-              <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>
-                <FaCloudDownloadAlt /> &nbsp;Backup
-              </NavLink>
-            </li>
+
+                <li>
+                  <NavLink to="/usuario" activeclassname="active" onClick={handleLinkClick}>
+                    <FaUsers /> &nbsp;Usuarios
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/categoria" activeclassname="active" onClick={handleLinkClick}>
+                    <FaTags /> &nbsp;Categorias
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/plato" activeclassname="active" onClick={handleLinkClick}>
+                    <GiChickenOven /> &nbsp;Platos
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/bebida" activeclassname="active" onClick={handleLinkClick}>
+                    <FaGlassCheers /> &nbsp;Bebidas
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+            {(isAdmin || isCajero) && (
+              <>
+                <li>
+                  <NavLink to="/caja" activeclassname="active" onClick={handleLinkClick}>
+                    <FaCashRegister /> &nbsp;Caja
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/ventas" activeclassname="active" onClick={handleLinkClick}>
+                    <FaShoppingCart /> &nbsp;Ventas
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+            {/* {isAdmin && (
+              <li>
+                <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>
+                  <FaCloudDownloadAlt /> &nbsp;Backup
+                </NavLink>
+              </li>
+            )} */}
           </ul>
         </nav>
       </div>

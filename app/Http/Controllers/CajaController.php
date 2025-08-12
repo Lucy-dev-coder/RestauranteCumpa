@@ -5,15 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Caja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CajaController extends Controller
 {
     // Listar todas las cajas
     public function index()
     {
-        $cajas = Caja::with('usuario')->orderBy('id', 'desc')->get();
+        $user = Auth::user();
+        if ($user->rol === 'admin') {
+            // Admin ve todas las cajas
+            $cajas = Caja::with('usuario')->orderBy('id', 'desc')->get();
+        } elseif ($user->rol === 'cajero') {
+            // Cajero ve solo sus cajas
+            $cajas = Caja::with('usuario')
+                ->where('usuario_id', $user->id)  // ajusta el campo si es otro nombre
+                ->orderBy('id', 'desc')
+                ->get();
+        } else {
+            // Opcional: si otro rol no tiene acceso, retorna 403 o vacío
+            return response()->json([], 403);
+        }
+
         return response()->json($cajas);
     }
+
 
 
     // Crear una nueva caja
@@ -67,14 +83,42 @@ class CajaController extends Controller
             'observaciones' => 'nullable|string',
         ]);
 
-        // Sobrescribes o añades los valores que quieres fijar:
+        $ventasIds = DB::table('ventas')->where('caja_id', $id)->pluck('id');
+
+        $totalPlatos = DB::table('detalle_ventas')
+            ->whereIn('venta_id', $ventasIds)
+            ->selectRaw('SUM(cantidad * precio_unitario) as total')
+            ->value('total') ?? 0;
+
+        $totalBebidas = DB::table('detalle_ventas_bebidas')
+            ->whereIn('venta_id', $ventasIds)
+            ->selectRaw('SUM(cantidad * precio_unitario) as total')
+            ->value('total') ?? 0;
+
+        $movimientosIngresos = DB::table('movimientos_caja')
+            ->where('caja_id', $id)
+            ->where('tipo', 'ingreso')
+            ->sum('monto');
+
+        $movimientosEgresos = DB::table('movimientos_caja')
+            ->where('caja_id', $id)
+            ->where('tipo', 'egreso')
+            ->sum('monto');
+
+        $totalMovimientos = $movimientosIngresos - $movimientosEgresos;
+
+        // Monto esperado suma monto_apertura + ventas + movimientos netos
+        $monto_esperado = ($caja->monto_apertura ?? 0) + $totalPlatos + $totalBebidas + $totalMovimientos;
+
         $validated['fecha_cierre'] = now();
         $validated['estado'] = 'cerrada';
+        $validated['monto_esperado'] = $monto_esperado;
 
         $caja->update($validated);
 
         return response()->json($caja);
     }
+
 
 
     // Eliminar caja
@@ -87,14 +131,13 @@ class CajaController extends Controller
     }
 
     public function cajasAbiertas(Request $request)
-{
-    $userId = $request->user()->id;
+    {
+        $userId = $request->user()->id;
 
-    $cajasAbiertas = Caja::where('usuario_id', $userId)
-                         ->where('estado', 'abierta')
-                         ->get();
+        $cajasAbiertas = Caja::where('usuario_id', $userId)
+            ->where('estado', 'abierta')
+            ->get();
 
-    return response()->json($cajasAbiertas);
-}
-
+        return response()->json($cajasAbiertas);
+    }
 }

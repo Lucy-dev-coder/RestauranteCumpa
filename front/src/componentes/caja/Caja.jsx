@@ -17,6 +17,8 @@ const Caja = () => {
     const [movimientosOpen, setMovimientosOpen] = useState(false);
     const [tipoMovimiento, setTipoMovimiento] = useState('ingreso'); // ingreso|egreso
     const [cajaParaMovimiento, setCajaParaMovimiento] = useState(null);
+    // Al inicio del componente Caja
+    const usuario = JSON.parse(localStorage.getItem('usuario')) || { rol: '' };
 
     const API_BASE_URL = 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public'; // Cambia por la URL real de tu backend
     const obtenerCajas = async () => {
@@ -148,6 +150,7 @@ const Caja = () => {
                         onIngreso={(caja) => abrirModalMovimiento(caja, 'ingreso')}
                         onEgreso={(caja) => abrirModalMovimiento(caja, 'egreso')}
                         onVerDetalles={onVerDetalles}  // Agrega esta línea
+                        userRole={usuario.rol}  // <-- aquí pasa el rol que tienes en el estado o context
                     />
 
                     <AgregarCaja
