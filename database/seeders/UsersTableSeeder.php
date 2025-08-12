@@ -12,7 +12,7 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'name' => 'Administrador',
+                'name' => 'Juan',
                 'email' => 'juan@gmail.com',
                 'password' => Hash::make('123456'),
                 'rol' => 'admin',
@@ -21,23 +21,15 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Cajero 1',
-                'email' => 'cajero@gmail.com',
-                'password' => Hash::make('cajero'),
+                'name' => 'Jose',
+                'email' => 'jose@gmail.com',
+                'password' => Hash::make('123456'),
                 'rol' => 'cajero',
                 'estado' => 'habilitado',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [
-                'name' => 'Cajero Inactivo',
-                'email' => 'inactivo@restaurante.com',
-                'password' => Hash::make('inactivo123'),
-                'rol' => 'cajero',
-                'estado' => 'deshabilitado',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+           
         ]);
     }
 }

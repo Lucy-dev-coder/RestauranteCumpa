@@ -129,6 +129,21 @@ export default function Ventas() {
     if (tabValue === 1) return bebidasFiltradas;
     return [];
   };
+  const actualizarStockBebidas = (itemsVendidos) => {
+  setBebidas(prevBebidas => {
+    return prevBebidas.map(bebida => {
+      const itemVendido = itemsVendidos.find(
+        item => item.tipo === 'bebida' && item.id === bebida.id
+      );
+      if (itemVendido) {
+        // Reducir stock según cantidad vendida
+        return { ...bebida, stock: bebida.stock - itemVendido.cantidad };
+      }
+      return bebida;
+    });
+  });
+};
+
 
   const renderProducto = (producto, tipo) => (
     <Card key={`${tipo}-${producto.id}`} className="producto-card">
@@ -376,7 +391,8 @@ export default function Ventas() {
               setPlatos(prev => prev.map(p => ({ ...p, cantidad: '', observacion: '' })));
               setBebidas(prev => prev.map(b => ({ ...b, cantidad: '' })));
             }}
-            usuarioId={usuario?.id}  // <== Aquí paso el id usuario logueado
+            usuarioId={usuario?.id}
+            actualizarStockBebidas={actualizarStockBebidas}
           />
         </>
       )}

@@ -106,7 +106,7 @@ class BebidasSeeder extends Seeder
 
             //FANTA
 [
-                'nombre' => 'Coca Cola 3L (No retorn.)',
+                'nombre' => 'Fanta 3L (No retorn.)',
                 'precio' => 22.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -115,7 +115,7 @@ class BebidasSeeder extends Seeder
                 'updated_at' => now(),
             ],
              [
-                'nombre' => 'Coca Cola 2 1/2L (No retorn.)',
+                'nombre' => 'Fanta 2 1/2L (No retorn.)',
                 'precio' => 19.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -124,7 +124,7 @@ class BebidasSeeder extends Seeder
                 'updated_at' => now(),
             ],
              [
-                'nombre' => 'Coca Cola 2L (No retorn.)',
+                'nombre' => 'Fanta 2L (No retorn.)',
                 'precio' => 17.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -134,7 +134,7 @@ class BebidasSeeder extends Seeder
             ],
 
              [
-                'nombre' => 'Coca Cola 2L',
+                'nombre' => 'Fanta 2L',
                 'precio' => 14.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -143,7 +143,7 @@ class BebidasSeeder extends Seeder
                 'updated_at' => now(),
             ],
              [
-                'nombre' => 'Coca Cola 1 1/2L',
+                'nombre' => 'Fanta 1 1/2L',
                 'precio' => 12.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -152,7 +152,7 @@ class BebidasSeeder extends Seeder
                 'updated_at' => now(),
             ],
              [
-                'nombre' => 'Coca Cola 1L',
+                'nombre' => 'Fanta 1L',
                 'precio' => 10.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -161,7 +161,7 @@ class BebidasSeeder extends Seeder
                 'updated_at' => now(),
             ],
              [
-                'nombre' => 'Coca Cola Popular',
+                'nombre' => 'Fanta Popular',
                 'precio' => 8.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',
@@ -170,7 +170,7 @@ class BebidasSeeder extends Seeder
                 'updated_at' => now(),
             ],
                [
-                'nombre' => 'Coca Cola Personal',
+                'nombre' => 'Fanta Personal',
                 'precio' => 3.00,
                 'stock' => 50,
                 'imagen' => 'imagenes/fanta.webp',

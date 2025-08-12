@@ -25,6 +25,7 @@ export default function CarritoModal({
   eliminarDelCarrito,
   limpiarCarrito,
   usuarioId = null,
+   actualizarStockBebidas, 
 }) {
   const [mesa, setMesa] = useState('');
   const [metodoPago, setMetodoPago] = useState('efectivo');
@@ -82,7 +83,8 @@ export default function CarritoModal({
 
       // 3. Enviar venta
       const response = await axiosAuth.post('/ventas', payload);
-      console.log('Venta registrada:', response.data);
+       // Actualizar stock localmente solo para bebidas
+      actualizarStockBebidas(carrito);
 
       Swal.fire({
         icon: 'success',
@@ -96,8 +98,7 @@ export default function CarritoModal({
       setMetodoPago('efectivo');
       onClose();
 
-    } catch (e) {
-      console.error('Error enviando pedido o verificando caja:', e);
+    } catch (e) {      
       setError('Error al enviar el pedido o verificar la caja. Intenta de nuevo.');
     } finally {
       setLoadingEnvio(false);

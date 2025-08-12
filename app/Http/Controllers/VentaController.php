@@ -62,7 +62,7 @@ class VentaController extends Controller
                 'metodo_pago' => $validated['metodo_pago'],
             ]);
 
-            // Guardar detalles
+            // Guardar detalles y actualizar stock de bebidas
             foreach ($validated['items'] as $item) {
                 if ($item['tipo'] === 'plato') {
                     DetalleVenta::create([
@@ -79,6 +79,11 @@ class VentaController extends Controller
                         'cantidad' => $item['cantidad'],
                         'precio_unitario' => $item['precio'],
                     ]);
+
+                    // Reducir stock de la bebida
+                    if (!empty($item['id'])) {
+                        \App\Models\Bebida::where('id', $item['id'])->decrement('stock', $item['cantidad']);
+                    }
                 }
             }
 
@@ -96,6 +101,7 @@ class VentaController extends Controller
             ], 500);
         }
     }
+
 
     // Mostrar venta específica
     public function show(Venta $venta)
