@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
         // Ejecutar los seeders en orden
         $this->call([
             UsersTableSeeder::class,
-            CategoriasTableSeeder::class,
+            CategoriasSeeder::class,
             PlatosTableSeeder::class,
+            BebidasSeeder::class,
         ]);
 
         // Crear un usuario de prueba con factory

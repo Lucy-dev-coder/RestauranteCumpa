@@ -56,9 +56,9 @@ const Plato = () => {
         icon: 'success',
         title: 'Éxito',
         text: 'Plato agregado correctamente',
-        showConfirmButton: false, // Oculta el botón OK
-        timer: 900,               // Tiempo en ms para que desaparezca solo
-        timerProgressBar: true,   // Opcional: barra de progreso de tiempo
+        showConfirmButton: false, 
+        timer: 900,               
+        timerProgressBar: true,  
       });
 
     } catch (err) {
@@ -152,7 +152,7 @@ const Plato = () => {
             onAgregar={handleOpenAgregar}
             onEditar={handleOpenEditar}
             onEliminar={eliminarPlato}
-            onToggleEstado={toggleEstadoPlato} // 👈 aquí
+            onToggleEstado={toggleEstadoPlato} 
           />
 
           <AgregarPlato

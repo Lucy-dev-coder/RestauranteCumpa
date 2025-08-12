@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('platos', PlatoController::class);
     Route::apiResource('cajas', CajaController::class);
     Route::apiResource('ventas', VentaController::class);
+    Route::get('/cajas/abierta', [VentaController::class, 'cajaAbierta']);
 });
 
 

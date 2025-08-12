@@ -35,56 +35,55 @@ export default function CarritoModal({
   const total = carrito.reduce((acc, item) => acc + (item.precio * (item.cantidad || 0)), 0);
   const totalItems = carrito.reduce((acc, item) => acc + (item.cantidad || 0), 0);
 
-   const handleConfirmarPedido = async () => {
-    if (!mesa) {
-      setError('Por favor, ingresa el número de mesa.');
-      return;
-    }
-    setLoadingEnvio(true);
-    setError(null);
+  const handleConfirmarPedido = async () => {
+  if (!mesa) {
+    setError('Por favor, ingresa el número de mesa.');
+    return;
+  }
+  setLoadingEnvio(true);
+  setError(null);
 
-    try {
-      const payload = {
-        caja_id: cajaId,
-        usuario_id: usuarioId,
-        total: total,
-        mesa: mesa,
-        metodo_pago: metodoPago,
-        items: carrito.map(item => ({
-          tipo: item.tipo,
-          id: item.id || null,
-          nombre: item.nombre,
-          cantidad: item.cantidad,
-          precio: item.precio,
-          observacion: item.observacion || null,
-        })),
-      };
+  try {
+    const payload = {
+      caja_id: cajaId,
+      usuario_id: usuarioId,
+      total: total,
+      mesa: mesa,
+      metodo_pago: metodoPago,
+      items: carrito.map(item => ({
+        tipo: item.tipo,
+        id: item.id || null,
+        nombre: item.nombre,
+        cantidad: item.cantidad,
+        precio: item.precio,
+        observacion: item.observacion || null,
+      })),
+    };
 
-      const response = await axiosAuth.post('/ventas', payload);
-      console.log('Venta registrada:', response.data);
+    const response = await axiosAuth.post('/ventas', payload);
+    console.log('Venta registrada:', response.data);
 
-      // SweetAlert de confirmación rápida
-      Swal.fire({
-        icon: 'success',
-        title: 'Pedido confirmado',
-        showConfirmButton: false,
-        timer: 800
-      });
+    // SweetAlert de confirmación rápida
+    Swal.fire({
+      icon: 'success',
+      title: 'Pedido confirmado',
+      showConfirmButton: false,
+      timer: 800
+    });
 
-      // Limpiar carrito y cerrar modal
-      limpiarCarrito();
-      setMesa('');
-      setMetodoPago('efectivo');
-      onClose();
+    // Limpiar carrito y cerrar modal
+    limpiarCarrito();
+    setMesa('');
+    setMetodoPago('efectivo');
+    onClose();
 
-    } catch (e) {
-      console.error('Error enviando pedido:', e);
-      setError('Error al enviar el pedido. Intenta de nuevo.');
-    } finally {
-      setLoadingEnvio(false);
-    }
-  };
-
+  } catch (e) {
+    console.error('Error enviando pedido:', e);
+    setError('Error al enviar el pedido. Intenta de nuevo.');
+  } finally {
+    setLoadingEnvio(false);
+  }
+};
 
   return (
     <Modal open={open} onClose={onClose} className="carrito-modal-overlay">

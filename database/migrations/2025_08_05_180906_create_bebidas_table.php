@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('bebidas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 30);
+            $table->string('nombre', 100);
             $table->decimal('precio', 10, 2);
             $table->integer('stock')->default(0);
             $table->string('imagen', 255)->nullable();
