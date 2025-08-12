@@ -18,6 +18,9 @@ import CarritoModal from './CarritoModal';
 import './Ventas.css';
 import Spinner from '../../componentes/spinner/Spinner';
 import imagenes from '../../api/apiConfig'; // Ajusta ruta según tu estructura
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const BASE_URL_STORAGE = imagenes;
 
@@ -31,6 +34,12 @@ export default function Ventas() {
   const [modalOpen, setModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'error', // puede ser error, warning, info, success
+  });
+
 
   // Obtener usuario desde localStorage
   const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -38,6 +47,13 @@ export default function Ventas() {
   useEffect(() => {
     fetchData();
   }, []);
+  const mostrarErrorCantidad = (mensaje) => {
+    setSnackbar({
+      open: true,
+      message: mensaje,
+      severity: 'error',
+    });
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -133,7 +149,7 @@ export default function Ventas() {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          height: tipo === 'plato' ? 230 : 160,
+          height: tipo === 'plato' ? 230 : 180,
           padding: '12px 16px',
         }}
         className="producto-content"
@@ -158,6 +174,32 @@ export default function Ventas() {
           >
             {producto.nombre}
           </Typography>
+
+          {tipo === 'bebida' ? (
+            <Box className="bebida-info" title={`Stock disponible: ${producto.stock}`}>
+              <Typography className="precio-bebida">
+                Bs.{typeof producto.precio === 'number' || !isNaN(Number(producto.precio))
+                  ? Number(producto.precio).toFixed(2)
+                  : '0.00'}
+              </Typography>
+
+              <Box className={`stock-badge ${producto.stock <= 5 ? 'stock-bajo' : ''}`}>
+                <Inventory2Icon
+                  className="stock-icon"
+                  sx={{ color: producto.stock <= 5 ? '#c62828' : '#2e7d32' }}
+                />
+                <Typography className="stock-text">
+                  {producto.stock}
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Typography className="precio-plato">
+              Bs.{typeof producto.precio === 'number' || !isNaN(Number(producto.precio))
+                ? Number(producto.precio).toFixed(2)
+                : '0.00'}
+            </Typography>
+          )}
         </Box>
 
         <TextField
@@ -169,14 +211,23 @@ export default function Ventas() {
           value={producto.cantidad || ''}
           onChange={e => {
             const cant = e.target.value === '' ? '' : parseInt(e.target.value);
-            if (tipo === 'plato') {
-              setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, cantidad: cant } : p));
-              actualizarCarrito({ ...producto, tipo }, cant, producto.observacion || '');
-            } else {
+
+            if (tipo === 'bebida') {
+              if (cant > producto.stock) {
+                mostrarErrorCantidad(`Cantidad máxima disponible: ${producto.stock}`);
+                return; // No actualizar estados
+              }
+              // Si pasa validación, actualizar
               setBebidas(prev => prev.map(b => b.id === producto.id ? { ...b, cantidad: cant } : b));
               actualizarCarrito({ ...producto, tipo }, cant);
+
+            } else {
+              // Platos no tienen stock? O no validas, solo actualizas
+              setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, cantidad: cant } : p));
+              actualizarCarrito({ ...producto, tipo }, cant, producto.observacion || '');
             }
           }}
+
           inputProps={{ min: 0 }}
           className="cantidad-input"
         />
@@ -329,6 +380,42 @@ export default function Ventas() {
           />
         </>
       )}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          mt: 38, // margen superior para que no choque con el header o borde superior
+          '& .MuiSnackbarContent-root': {
+            minWidth: 300,
+            maxWidth: '90vw',
+            borderRadius: 2,
+            boxShadow: '0px 4px 10px rgba(0,0,0,0.3)',
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            letterSpacing: '0.02em',
+            textAlign: 'center',
+          },
+        }}
+      >
+        <Alert
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+          severity={snackbar.severity}
+          sx={{
+            width: '100%',
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            padding: '12px 16px',
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+
+
+
     </>
+
   );
 };

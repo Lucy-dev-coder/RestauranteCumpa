@@ -36,6 +36,10 @@ const PlatosTable = ({ platos }) => {
     setInputs(initial);
   }, [platos]);
 
+  useEffect(() => {
+  console.log("Platos recibidos:", platos);
+}, [platos]);
+
   const handleInputChange = (id, field, value) => {
     setInputs((prev) => ({
       ...prev,

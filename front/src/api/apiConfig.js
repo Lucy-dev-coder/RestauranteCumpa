@@ -1,3 +1,3 @@
-const imagenes = 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public/storage/';
+const imagenes = 'http://localhost/Sistema_cumpa/RestauranteCumpa/public/storage/';
 
 export default imagenes;

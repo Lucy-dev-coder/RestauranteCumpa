@@ -501,4 +501,65 @@
   margin: 0 auto;
   backdrop-filter: blur(10px);
 }
+/*============*/
+/* Precio para platos */
+.precio-plato {
+  color: #56e55dff;  /* verde oscuro */
+  font-weight: 700;
+  margin-top: 4px;
+  font-size: 1.1rem;
+}
+
+/* Contenedor precio + stock bebidas */
+.bebida-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+/* Precio bebida */
+.precio-bebida {
+  color: #56e55dff; /* azul agradable */
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Badge stock bebida - verde para stock suficiente */
+.stock-badge {
+  display: flex;
+  align-items: center;
+  background-color: #c8e6c9;
+  border-radius: 12px;
+  padding: 2px 8px;
+  min-width: 48px;
+  justify-content: center;
+  cursor: default;
+  user-select: none;
+}
+
+/* Stock bajo (menos o igual a 5) */
+.stock-bajo {
+  background-color: #ffcdd2;
+}
+
+/* Icono stock */
+.stock-icon {
+  font-size: 18px;
+  margin-right: 4px;
+}
+
+/* Texto stock normal */
+.stock-text {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+/* Texto stock bajo */
+.stock-bajo .stock-text {
+  color: #c62828;
+}
+
 
