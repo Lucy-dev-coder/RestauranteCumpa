@@ -6,9 +6,10 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import axiosAuth from '../../api/axiosConfig'; // Ajusta ruta según tu estructura
+import imagenes from '../../api/apiConfig'; // Ajusta ruta según tu estructura
 // Ajusta esta URL base según dónde estén alojadas las imágenes en tu backend
-const URL_IMAGENES_BASE = 'http://localhost:8000/storage/';
+const URL_IMAGENES_BASE = imagenes;
 
 const PlatoTable = ({ platos, onAgregar, onEditar, onEliminar, onToggleEstado }) => {
   const [searchTerm, setSearchTerm] = useState('');

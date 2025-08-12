@@ -42,6 +42,9 @@ const Login = () => {
 
       localStorage.setItem('token', res.data.access_token);
 
+      // Guardar el usuario completo para usar luego
+      localStorage.setItem('usuario', JSON.stringify(res.data.user));
+
       if (rememberMe) {
         localStorage.setItem('username', username);
         localStorage.setItem('rememberMe', 'true');
@@ -50,8 +53,7 @@ const Login = () => {
         localStorage.setItem('rememberMe', 'false');
       }
 
-      localStorage.setItem('token', res.data.access_token);
-      navigate('/usuario');
+      navigate('/usuario');  // o la ruta que uses para la página protegida
     } catch (error) {
       Swal.fire(
         'Error',
@@ -62,6 +64,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="login-container">

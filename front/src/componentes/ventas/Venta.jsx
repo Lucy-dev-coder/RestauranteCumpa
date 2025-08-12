@@ -17,8 +17,9 @@ import axiosAuth from '../../api/axiosConfig';
 import CarritoModal from './CarritoModal';
 import './Ventas.css';
 import Spinner from '../../componentes/spinner/Spinner';
+import imagenes from '../../api/apiConfig'; // Ajusta ruta según tu estructura
 
-const BASE_URL_STORAGE = 'http://localhost:8000/storage/';
+const BASE_URL_STORAGE = imagenes;
 
 export default function Ventas() {
   const [tabValue, setTabValue] = useState(0);
@@ -31,12 +32,15 @@ export default function Ventas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Obtener usuario desde localStorage
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    setLoading(true); // inicio carga
+    setLoading(true);
     try {
       const [platosRes, bebidasRes, categoriasRes] = await Promise.all([
         axiosAuth.get('/platos'),
@@ -49,7 +53,7 @@ export default function Ventas() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false); // fin carga
+      setLoading(false);
     }
   };
 
@@ -73,12 +77,10 @@ export default function Ventas() {
   };
 
   const eliminarDelCarrito = (producto) => {
-    // Quita el producto del carrito
     setCarrito(prev =>
       prev.filter(item => !(item.id === producto.id && item.tipo === producto.tipo))
     );
 
-    // Resetea en la lista de platos o bebidas
     if (producto.tipo === 'plato') {
       setPlatos(prev =>
         prev.map(p =>
@@ -98,8 +100,6 @@ export default function Ventas() {
     }
   };
 
-
-  // Filtrado combinado para buscador y categorías
   const productosFiltrados = () => {
     const platosFiltrados = platos.filter(p =>
       p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -123,7 +123,6 @@ export default function Ventas() {
           className="producto-img"
           loading="lazy"
         />
-        {/* Badge de cantidad mejorado */}
         {producto.cantidad > 0 && (
           <Box className="cantidad-badge">
             {producto.cantidad} unid.
@@ -139,7 +138,6 @@ export default function Ventas() {
         }}
         className="producto-content"
       >
-        {/* Contenedor dinámico nombre + observación */}
         <Box
           sx={{
             flexGrow: 1,
@@ -183,7 +181,6 @@ export default function Ventas() {
           className="cantidad-input"
         />
 
-        {/* Solo mostrar observación en platos */}
         {tipo === 'plato' && (
           <TextField
             label="Observación"
@@ -215,7 +212,6 @@ export default function Ventas() {
         </Box>
       ) : (
         <>
-          {/* Header mejorado */}
           <Typography className="ventas-title">
             Sistema de Ventas
           </Typography>
@@ -231,9 +227,6 @@ export default function Ventas() {
               <Tab label="🥤 Bebidas" className="ventas-tab" />
             </Tabs>
           </Box>
-
-
-          {/* Controles de filtro mejorados */}
 
           <Box className="controles-flex">
             <TextField
@@ -269,7 +262,6 @@ export default function Ventas() {
             )}
           </Box>
 
-          {/* Estadísticas rápidas */}
           <Box className="estadisticas-container">
             <Box className="estadistica-card">
               <Typography className="estadistica-label">
@@ -292,15 +284,12 @@ export default function Ventas() {
             )}
           </Box>
 
-
-          {/* Grid de productos */}
           <Box className={tabValue === 0 ? "grid-platos" : "grid-bebidas"}>
             {productosFiltrados().map((item) =>
               renderProducto(item, tabValue === 0 ? "plato" : "bebida")
             )}
           </Box>
 
-          {/* Estado vacío mejorado */}
           {productosFiltrados().length === 0 && (
             <Box className="empty-state">
               <Box className="empty-icon">🔍</Box>
@@ -313,7 +302,6 @@ export default function Ventas() {
             </Box>
           )}
 
-          {/* Botón carrito flotante mejorado */}
           <IconButton
             color="primary"
             className="boton-carrito-flotante"
@@ -337,9 +325,8 @@ export default function Ventas() {
               setPlatos(prev => prev.map(p => ({ ...p, cantidad: '', observacion: '' })));
               setBebidas(prev => prev.map(b => ({ ...b, cantidad: '' })));
             }}
+            usuarioId={usuario?.id}  // <== Aquí paso el id usuario logueado
           />
-
-
         </>
       )}
     </>

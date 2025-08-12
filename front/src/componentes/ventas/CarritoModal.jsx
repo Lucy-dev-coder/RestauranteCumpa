@@ -14,18 +14,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import axios from 'axios';
-import './CarritoModal.css';
-import axiosAuth from '../../api/axiosConfig';
 import Swal from 'sweetalert2';
+import axiosAuth from '../../api/axiosConfig';
+import './CarritoModal.css';
+
 export default function CarritoModal({
   open,
   onClose,
   carrito,
   eliminarDelCarrito,
   limpiarCarrito,
-  cajaId = 1, // puedes pasar este prop desde el padre si tienes
-  usuarioId = null, // opcional si tienes usuario logueado
+  usuarioId = null,
 }) {
   const [mesa, setMesa] = useState('');
   const [metodoPago, setMetodoPago] = useState('efectivo');
@@ -36,54 +35,74 @@ export default function CarritoModal({
   const totalItems = carrito.reduce((acc, item) => acc + (item.cantidad || 0), 0);
 
   const handleConfirmarPedido = async () => {
-  if (!mesa) {
-    setError('Por favor, ingresa el número de mesa.');
-    return;
-  }
-  setLoadingEnvio(true);
-  setError(null);
+    if (!mesa) {
+      setError('Por favor, ingresa el número de mesa.');
+      return;
+    }
+    if (!usuarioId) {
+      setError('Usuario no identificado.');
+      return;
+    }
 
-  try {
-    const payload = {
-      caja_id: cajaId,
-      usuario_id: usuarioId,
-      total: total,
-      mesa: mesa,
-      metodo_pago: metodoPago,
-      items: carrito.map(item => ({
-        tipo: item.tipo,
-        id: item.id || null,
-        nombre: item.nombre,
-        cantidad: item.cantidad,
-        precio: item.precio,
-        observacion: item.observacion || null,
-      })),
-    };
+    setLoadingEnvio(true);
+    setError(null);
 
-    const response = await axiosAuth.post('/ventas', payload);
-    console.log('Venta registrada:', response.data);
+    try {
+      // 1. Consultar cajas abiertas para el usuario
+      const cajaResponse = await axiosAuth.get('/cajas', {
+        params: { usuario_id: usuarioId }
+      });
 
-    // SweetAlert de confirmación rápida
-    Swal.fire({
-      icon: 'success',
-      title: 'Pedido confirmado',
-      showConfirmButton: false,
-      timer: 800
-    });
+      const cajasAbiertas = cajaResponse.data.filter(caja => caja.estado === 'abierta');
 
-    // Limpiar carrito y cerrar modal
-    limpiarCarrito();
-    setMesa('');
-    setMetodoPago('efectivo');
-    onClose();
+      if (cajasAbiertas.length === 0) {
+        setError('No tienes una caja abierta. Por favor abre una caja antes de realizar pedidos.');
+        setLoadingEnvio(false);
+        return;
+      }
 
-  } catch (e) {
-    console.error('Error enviando pedido:', e);
-    setError('Error al enviar el pedido. Intenta de nuevo.');
-  } finally {
-    setLoadingEnvio(false);
-  }
-};
+      const cajaAbierta = cajasAbiertas[0];
+
+      // 2. Crear payload con caja_id y usuario_id correctos
+      const payload = {
+        caja_id: cajaAbierta.id,
+        usuario_id: usuarioId,
+        total: total,
+        mesa,
+        metodo_pago: metodoPago,
+        items: carrito.map(item => ({
+          tipo: item.tipo,
+          id: item.id || null,
+          nombre: item.nombre,
+          cantidad: item.cantidad,
+          precio: item.precio,
+          observacion: item.observacion || null,
+        })),
+      };
+
+      // 3. Enviar venta
+      const response = await axiosAuth.post('/ventas', payload);
+      console.log('Venta registrada:', response.data);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Pedido confirmado',
+        showConfirmButton: false,
+        timer: 800,
+      });
+
+      limpiarCarrito();
+      setMesa('');
+      setMetodoPago('efectivo');
+      onClose();
+
+    } catch (e) {
+      console.error('Error enviando pedido o verificando caja:', e);
+      setError('Error al enviar el pedido o verificar la caja. Intenta de nuevo.');
+    } finally {
+      setLoadingEnvio(false);
+    }
+  };
 
   return (
     <Modal open={open} onClose={onClose} className="carrito-modal-overlay">
@@ -137,7 +156,6 @@ export default function CarritoModal({
                     }
                   >
                     <Box sx={{ flexGrow: 1, ml: 2 }}>
-                      {/* Primera fila: nombre, cantidad y precio */}
                       <Box
                         sx={{
                           display: 'flex',
@@ -159,7 +177,6 @@ export default function CarritoModal({
                         </Typography>
                       </Box>
 
-                      {/* Segunda fila: observación, si existe */}
                       {item.observacion && (
                         <Typography
                           className="producto-observacion"

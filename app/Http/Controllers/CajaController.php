@@ -85,4 +85,16 @@ class CajaController extends Controller
 
         return response()->json(['message' => 'Caja eliminada correctamente']);
     }
+
+    public function cajasAbiertas(Request $request)
+{
+    $userId = $request->user()->id;
+
+    $cajasAbiertas = Caja::where('usuario_id', $userId)
+                         ->where('estado', 'abierta')
+                         ->get();
+
+    return response()->json($cajasAbiertas);
+}
+
 }

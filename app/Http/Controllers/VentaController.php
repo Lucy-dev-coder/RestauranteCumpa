@@ -23,11 +23,8 @@ class VentaController extends Controller
     // Crear una nueva venta
     public function store(Request $request)
     {
-
-      
         $validated = $request->validate([
             'caja_id' => 'required|exists:caja,id',
-
             'total' => 'required|numeric|min:0',
             'mesa' => 'nullable|string|max:10',
             'metodo_pago' => 'required|in:efectivo,qr',
@@ -39,10 +36,24 @@ class VentaController extends Controller
             'items.*.precio' => 'required|numeric|min:0',
             'items.*.observacion' => 'nullable|string|max:255',
         ]);
-        $usuarioId = Auth::id();
+
+        $usuarioId = $request->user()->id;
+
+        // Verificar que la caja_id enviada pertenece al usuario y está abierta
+        $cajaValida = \App\Models\Caja::where('id', $validated['caja_id'])
+            ->where('usuario_id', $usuarioId)
+            ->where('estado', 'abierta')
+            ->exists();
+
+        if (!$cajaValida) {
+            return response()->json([
+                'error' => 'Caja inválida o no abierta para este usuario'
+            ], 403);
+        }
+
         DB::beginTransaction();
         try {
-            // 1️⃣ Crear la venta
+            // Crear la venta
             $venta = Venta::create([
                 'caja_id' => $validated['caja_id'],
                 'usuario_id' => $usuarioId,
@@ -51,7 +62,7 @@ class VentaController extends Controller
                 'metodo_pago' => $validated['metodo_pago'],
             ]);
 
-            // 2️⃣ Recorrer los ítems y registrar detalles
+            // Guardar detalles
             foreach ($validated['items'] as $item) {
                 if ($item['tipo'] === 'plato') {
                     DetalleVenta::create([
@@ -64,7 +75,7 @@ class VentaController extends Controller
                     DetalleVentasBebida::create([
                         'venta_id' => $venta->id,
                         'bebida' => $item['nombre'],
-                        'bebida_id' => $item['id'] ?? null, // si tienes ID de bebida
+                        'bebida_id' => $item['id'] ?? null,
                         'cantidad' => $item['cantidad'],
                         'precio_unitario' => $item['precio'],
                     ]);
@@ -115,5 +126,4 @@ class VentaController extends Controller
         $venta->delete();
         return response()->json(null, 204);
     }
-  
 }

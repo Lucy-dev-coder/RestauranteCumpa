@@ -22,9 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('platos', PlatoController::class);
     Route::apiResource('cajas', CajaController::class);
     Route::apiResource('ventas', VentaController::class);
+    Route::get('/cajas/abiertas', [CajaController::class, 'cajasAbiertas']);
 });
 Route::get('cajas/{id}/pdf', [MovimientoCajaController::class, 'generarPdfVentas']);
-
 
 
 
