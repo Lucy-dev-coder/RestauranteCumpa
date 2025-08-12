@@ -73,30 +73,30 @@ export default function Ventas() {
   };
 
   const eliminarDelCarrito = (producto) => {
-  // Quita el producto del carrito
-  setCarrito(prev =>
-    prev.filter(item => !(item.id === producto.id && item.tipo === producto.tipo))
-  );
+    // Quita el producto del carrito
+    setCarrito(prev =>
+      prev.filter(item => !(item.id === producto.id && item.tipo === producto.tipo))
+    );
 
-  // Resetea en la lista de platos o bebidas
-  if (producto.tipo === 'plato') {
-    setPlatos(prev =>
-      prev.map(p =>
-        p.id === producto.id
-          ? { ...p, cantidad: '', observacion: '' }
-          : p
-      )
-    );
-  } else if (producto.tipo === 'bebida') {
-    setBebidas(prev =>
-      prev.map(b =>
-        b.id === producto.id
-          ? { ...b, cantidad: '' }
-          : b
-      )
-    );
-  }
-};
+    // Resetea en la lista de platos o bebidas
+    if (producto.tipo === 'plato') {
+      setPlatos(prev =>
+        prev.map(p =>
+          p.id === producto.id
+            ? { ...p, cantidad: '', observacion: '' }
+            : p
+        )
+      );
+    } else if (producto.tipo === 'bebida') {
+      setBebidas(prev =>
+        prev.map(b =>
+          b.id === producto.id
+            ? { ...b, cantidad: '' }
+            : b
+        )
+      );
+    }
+  };
 
 
   // Filtrado combinado para buscador y categorías
@@ -220,15 +220,18 @@ export default function Ventas() {
             Sistema de Ventas
           </Typography>
 
-          <Tabs
-            value={tabValue}
-            onChange={handleChangeTab}
-            centered
-            className="ventas-tabs"
-          >
-            <Tab label="🍽️ Platos" className="ventas-tab" />
-            <Tab label="🥤 Bebidas" className="ventas-tab" />
-          </Tabs>
+          <Box className="tabs-sticky-container">
+            <Tabs
+              value={tabValue}
+              onChange={handleChangeTab}
+              centered
+              className="ventas-tabs"
+            >
+              <Tab label="🍽️ Platos" className="ventas-tab" />
+              <Tab label="🥤 Bebidas" className="ventas-tab" />
+            </Tabs>
+          </Box>
+
 
           {/* Controles de filtro mejorados */}
 

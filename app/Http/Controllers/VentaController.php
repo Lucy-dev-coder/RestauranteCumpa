@@ -9,6 +9,7 @@ use App\Models\DetalleVentasBebida;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Caja;
 
 class VentaController extends Controller
 {
@@ -22,9 +23,11 @@ class VentaController extends Controller
     // Crear una nueva venta
     public function store(Request $request)
     {
+
+      
         $validated = $request->validate([
             'caja_id' => 'required|exists:caja,id',
-          
+
             'total' => 'required|numeric|min:0',
             'mesa' => 'nullable|string|max:10',
             'metodo_pago' => 'required|in:efectivo,qr',
@@ -36,7 +39,7 @@ class VentaController extends Controller
             'items.*.precio' => 'required|numeric|min:0',
             'items.*.observacion' => 'nullable|string|max:255',
         ]);
-$usuarioId = Auth::id();
+        $usuarioId = Auth::id();
         DB::beginTransaction();
         try {
             // 1️⃣ Crear la venta
@@ -112,4 +115,5 @@ $usuarioId = Auth::id();
         $venta->delete();
         return response()->json(null, 204);
     }
+  
 }

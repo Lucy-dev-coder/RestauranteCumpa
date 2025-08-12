@@ -15,14 +15,13 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Estas rutas requieren estar autenticado con Sanctum
 Route::middleware('auth:sanctum')->group(function () {
-  Route::post('/logout', [AuthController::class, 'logout']);
-  Route::apiResource('users', UserController::class);
-  Route::apiResource('categorias', CategoriaController::class);
-  Route::apiResource('bebidas', BebidaController::class);
-  Route::apiResource('platos', PlatoController::class);
-  Route::apiResource('cajas', CajaController::class);
-  Route::apiResource('ventas', VentaController::class);
-  Route::apiResource('movimientos-caja', MovimientoCajaController::class);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('categorias', CategoriaController::class);
+    Route::apiResource('bebidas', BebidaController::class);
+    Route::apiResource('platos', PlatoController::class);
+    Route::apiResource('cajas', CajaController::class);
+    Route::apiResource('ventas', VentaController::class);
 });
 Route::get('cajas/{id}/pdf', [MovimientoCajaController::class, 'generarPdfVentas']);
 
