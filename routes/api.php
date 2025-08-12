@@ -9,19 +9,22 @@ use App\Http\Controllers\BebidaController;
 use App\Http\Controllers\PlatoController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\MovimientoCajaController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
 // Estas rutas requieren estar autenticado con Sanctum
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('categorias', CategoriaController::class);
-    Route::apiResource('bebidas', BebidaController::class);
-    Route::apiResource('platos', PlatoController::class);
-    Route::apiResource('cajas', CajaController::class);
-    Route::apiResource('ventas', VentaController::class);
+  Route::post('/logout', [AuthController::class, 'logout']);
+  Route::apiResource('users', UserController::class);
+  Route::apiResource('categorias', CategoriaController::class);
+  Route::apiResource('bebidas', BebidaController::class);
+  Route::apiResource('platos', PlatoController::class);
+  Route::apiResource('cajas', CajaController::class);
+  Route::apiResource('ventas', VentaController::class);
+  Route::apiResource('movimientos-caja', MovimientoCajaController::class);
 });
+Route::get('cajas/{id}/pdf', [MovimientoCajaController::class, 'generarPdfVentas']);
 
 
 
