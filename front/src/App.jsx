@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
 import Login from './componentes/login/Login';
 import Usuario from './componentes/usuarios/Usuario';
 import Sidebar from './componentes/sidebar/Sidebar';

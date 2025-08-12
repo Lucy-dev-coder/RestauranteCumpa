@@ -3,12 +3,15 @@ import { FaUser } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import axiosAuth from '../../api/axiosConfig'; // Ajusta ruta según tu estructura
 import './Login.css';
+import { useNavigate } from 'react-router-dom';  // <-- cambia aquí
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // <-- inicializas el hook
 
   useEffect(() => {
     const savedUsername = localStorage.getItem('username');
@@ -47,9 +50,8 @@ const Login = () => {
         localStorage.setItem('rememberMe', 'false');
       }
 
-      
-
-      window.location.href = '/usuario';
+      localStorage.setItem('token', res.data.access_token);
+      navigate('/usuario');
     } catch (error) {
       Swal.fire(
         'Error',

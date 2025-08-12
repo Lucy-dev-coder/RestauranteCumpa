@@ -11,9 +11,10 @@ class CajaController extends Controller
     // Listar todas las cajas
     public function index()
     {
-        $cajas = Caja::with('usuario')->get();
+        $cajas = Caja::with('usuario')->orderBy('id', 'desc')->get();
         return response()->json($cajas);
     }
+
 
     // Crear una nueva caja
     public function store(Request $request)

@@ -6,14 +6,19 @@ import CajaTable from './CajaTable';
 import AgregarCaja from './AgregarCaja';
 import EditarCaja from './EditarCaja';
 import Spinner from '../../componentes/spinner/Spinner';
-
+import MovimientosCaja from './MovimientosCaja';
+import DetallesCaja from './DetallesCaja';
 const Caja = () => {
     const [loading, setLoading] = useState(false);
     const [cajas, setCajas] = useState([]);
     const [openAgregar, setOpenAgregar] = useState(false);
     const [openEditar, setOpenEditar] = useState(false);
     const [cajaEditar, setCajaEditar] = useState(null);
+    const [movimientosOpen, setMovimientosOpen] = useState(false);
+    const [tipoMovimiento, setTipoMovimiento] = useState('ingreso'); // ingreso|egreso
+    const [cajaParaMovimiento, setCajaParaMovimiento] = useState(null);
 
+    const API_BASE_URL = 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public'; // Cambia por la URL real de tu backend
     const obtenerCajas = async () => {
         setLoading(true);
         try {
@@ -32,7 +37,10 @@ const Caja = () => {
 
     const handleOpenAgregar = () => setOpenAgregar(true);
     const handleCloseAgregar = () => setOpenAgregar(false);
-
+    const onVerDetalles = (caja) => {
+        const url = `${API_BASE_URL}/api/cajas/${caja.id}/pdf`;
+        window.open(url, '_blank');
+    };
     const handleOpenEditar = (caja) => {
         setCajaEditar(caja);
         setOpenEditar(true);
@@ -40,6 +48,20 @@ const Caja = () => {
     const handleCloseEditar = () => {
         setCajaEditar(null);
         setOpenEditar(false);
+    };
+    // Abrir modal ingreso o egreso
+    const abrirModalMovimiento = (caja, tipo) => {
+        setCajaParaMovimiento(caja);
+        setTipoMovimiento(tipo);
+        setMovimientosOpen(true);
+    };
+    const cerrarModalMovimiento = () => {
+        setMovimientosOpen(false);
+        setCajaParaMovimiento(null);
+    };
+
+    const refrescarCajas = () => {
+        obtenerCajas();
     };
 
     const agregarCaja = async (nuevaCaja) => {
@@ -123,6 +145,9 @@ const Caja = () => {
                         onAgregar={handleOpenAgregar}
                         onEditar={handleOpenEditar}
                         onEliminar={eliminarCaja}
+                        onIngreso={(caja) => abrirModalMovimiento(caja, 'ingreso')}
+                        onEgreso={(caja) => abrirModalMovimiento(caja, 'egreso')}
+                        onVerDetalles={onVerDetalles}  // Agrega esta línea
                     />
 
                     <AgregarCaja
@@ -137,6 +162,15 @@ const Caja = () => {
                         onClose={handleCloseEditar}
                         onGuardar={editarCaja}
                     />
+                    {cajaParaMovimiento && (
+                        <MovimientosCaja
+                            open={movimientosOpen}
+                            onClose={cerrarModalMovimiento}
+                            tipoMovimiento={tipoMovimiento}
+                            cajaId={cajaParaMovimiento.id}
+                            onGuardado={refrescarCajas}
+                        />
+                    )}
                 </>
             )}
         </>

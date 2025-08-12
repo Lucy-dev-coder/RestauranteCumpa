@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 import {
@@ -6,7 +6,7 @@ import {
   FaBars, FaUser, FaSignOutAlt
 } from 'react-icons/fa';
 import { FaCashRegister } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
 import { GiChickenOven } from 'react-icons/gi';
 import Swal from 'sweetalert2';
 import axiosAuth from '../../api/axiosConfig'; // Ajusta la ruta según tu estructura
@@ -15,7 +15,8 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  const [token, setToken] = useState('');
   useEffect(() => {
     const checkIsMobile = () => {
       const mobileCheck = window.innerWidth < 768;
@@ -31,6 +32,16 @@ const Sidebar = () => {
       window.removeEventListener('resize', checkIsMobile);
     };
   }, []);
+  useEffect(() => {
+    const t = localStorage.getItem('token');
+    setToken(t);
+
+    // Si quieres redirigir si no hay token:
+    if (!t) {
+      navigate('/'); // o ruta login
+    }
+  }, [navigate]);
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -48,13 +59,14 @@ const Sidebar = () => {
       await axiosAuth.post('/logout');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      navigate('/'); // redirige sin recargar
     } catch (error) {
       Swal.fire('Error', 'No se pudo cerrar sesión', 'error');
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="container">

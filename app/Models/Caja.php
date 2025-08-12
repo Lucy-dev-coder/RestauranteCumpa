@@ -27,4 +27,12 @@ class Caja extends Model
     {
         return $this->belongsTo(User::class, 'usuario_id');
     }
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class); // Relación 1:N con ventas
+    }
+    public function movimientosCaja()
+    {
+        return $this->hasMany(MovimientoCaja::class); // Relación 1:N con movimientos de caja
+    }
 }

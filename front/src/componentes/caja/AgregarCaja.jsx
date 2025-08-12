@@ -10,7 +10,7 @@ const AgregarCaja = ({ open, onClose, onGuardar }) => {
   const [errorMonto, setErrorMonto] = useState(''); // estado para error
 
   const handleSubmit = () => {
-    if (!montoApertura || isNaN(montoApertura) || Number(montoApertura) <= 0) {
+    if (!montoApertura || isNaN(montoApertura) || Number(montoApertura) < 0) {
       setErrorMonto('El monto de apertura es obligatorio y debe ser un número positivo.');
       return;
     } else {
@@ -57,7 +57,7 @@ const AgregarCaja = ({ open, onClose, onGuardar }) => {
         />
         <TextField
           margin="dense"
-          label="Observaciones"
+          label="Observaciones (Opcional)"
           type="text"
           fullWidth
           multiline
