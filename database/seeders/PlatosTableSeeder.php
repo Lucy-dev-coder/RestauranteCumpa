@@ -130,7 +130,7 @@ class PlatosTableSeeder extends Seeder
             // CARNES SUELTAS
 
             [
-                'nombre' => 'Chorizo',
+                'nombre' => 'Porción de Chorizo',
                 'precio' => 12.00,
                 'imagen' => 'imagenes/S_chorizo.jpg',
                 'estado' => true,
@@ -139,7 +139,7 @@ class PlatosTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nombre' => 'Pollo',
+                'nombre' => 'Porción de Pollo',
                 'precio' => 18.00,
                 'imagen' => 'imagenes/S_pollo.jpg',
                 'estado' => true,
@@ -148,7 +148,7 @@ class PlatosTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nombre' => 'Res',
+                'nombre' => 'Porción de Res',
                 'precio' => 18.00,
                 'imagen' => 'imagenes/S_res.jpg',
                 'estado' => true,
@@ -157,7 +157,7 @@ class PlatosTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nombre' => 'Cerdo',
+                'nombre' => 'Porción de Cerdo',
                 'precio' => 18.00,
                 'imagen' => 'imagenes/S_cerdo.jpg',
                 'estado' => true,

@@ -54,7 +54,7 @@
 
 
 .ventas-tab {
-  color: rgba(255, 253, 253, 0.849) !important;
+  color: rgba(100, 50, 2, 0.849) !important;
   font-weight: 600 !important;
   font-size: 1.1rem !important;
   border-radius: 8px !important;
@@ -84,7 +84,7 @@
   gap: 16px;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  align-items: stretch;
+  align-items: center;
 }
 
 .search-input {
@@ -110,6 +110,24 @@
 .filter-icon {
   margin-right: 8px !important;
   color: #f95b00 !important;
+}
+
+/* Resaltado de labels para buscador y filtro */
+.resaltado-label .MuiInputLabel-root {
+  background-color: #ffa750;
+  /* mismo que el fondo del contenedor */
+  padding: 0 6px;
+  /* espacio alrededor del texto */
+  color: #902c04;
+  /* color del texto */
+  font-weight: bold;
+  border-radius: 8px;
+  /* bordes redondeados */
+}
+
+.resaltado-label .MuiInputLabel-root.Mui-focused {
+  color: #902c04;
+  /* color al enfocar */
 }
 
 /* ===========================================
@@ -156,7 +174,7 @@
 }
 
 /* ===========================================
-   GRIDS DE PRODUCTOS (TU CSS ORIGINAL MEJORADO)
+   GRIDS DE PRODUCTOS 
 =========================================== */
 .grid-platos {
   display: grid;
@@ -176,6 +194,16 @@
   min-height: 0px;
 }
 
+.grid-mixta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* O ajusta el número */
+  gap: 1rem;
+  max-width: 110vw;
+  /* igual que platos para mantener tamaño */
+  margin: 0 auto 2rem auto;
+  min-height: 600px;
+}
 
 /* ===========================================
    TARJETAS DE PRODUCTOS (TU CSS MEJORADO)
@@ -261,7 +289,7 @@
 
 .cantidad-input .MuiOutlinedInput-root:hover fieldset,
 .observacion-input .MuiOutlinedInput-root:hover fieldset {
-  border-color:#eb8f3f  !important;
+  border-color: #eb8f3f !important;
 }
 
 .cantidad-input .MuiOutlinedInput-root.Mui-focused fieldset,
@@ -269,6 +297,7 @@
   border-color: #eb8f3f !important;
   box-shadow: 0 0 0 2px rgba(163, 148, 130, 0.936) !important;
 }
+
 .cantidad-input .MuiInputLabel-root,
 .observacion-input .MuiInputLabel-root {
   color: #ffaf7d !important;
@@ -278,16 +307,19 @@
 .observacion-input .MuiInputLabel-root.Mui-focused {
   color: #ff8438a3 !important;
 }
+
 .cantidad-input .MuiOutlinedInput-input,
 .observacion-input .MuiOutlinedInput-input {
   color: #f8fafc !important;
 }
+
 /* ===========================================
   OBSERVACION y cantidad BORDE
 =========================================== */
 .observacion-input .MuiOutlinedInput-root fieldset {
   border-color: #ff7300;
 }
+
 .cantidad-input .MuiOutlinedInput-root fieldset {
   border-color: #ff7300;
 }
@@ -476,8 +508,8 @@
     color: white;
   }
 
- .producto-card {
-     background: linear-gradient(200deg, #516382d6 0%, #2d3748 100%) !important;
+  .producto-card {
+    background: linear-gradient(200deg, #516382d6 0%, #2d3748 100%) !important;
     color: white !important;
   }
 
@@ -485,6 +517,7 @@
     background-color: #e9686894;
   }
 }
+
 /* ===========================================
   PESTAÑAS
 =========================================== */
@@ -494,17 +527,19 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 4px;
   max-width: 300px;
   margin: 0 auto;
   backdrop-filter: blur(10px);
 }
+
 /*============*/
 /* Precio para platos */
 .precio-plato {
-  color: #56e55dff;  /* verde oscuro */
+  color: #56e55dff;
+  /* verde oscuro */
   font-weight: 700;
   margin-top: 4px;
   font-size: 1.1rem;
@@ -522,7 +557,8 @@
 
 /* Precio bebida */
 .precio-bebida {
-  color: #56e55dff; /* azul agradable */
+  color: #56e55dff;
+  /* azul agradable */
   font-weight: 700;
   font-size: 1.1rem;
 }
@@ -561,5 +597,3 @@
 .stock-bajo .stock-text {
   color: #c62828;
 }
-
-

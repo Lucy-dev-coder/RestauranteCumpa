@@ -63,7 +63,7 @@ export default function Ventas() {
         axiosAuth.get('/bebidas'),
         axiosAuth.get('/categorias'),
       ]);
-      setPlatos(platosRes.data.map(p => ({ ...p, cantidad: '', observacion: '' })));
+      setPlatos(platosRes.data.map(p => ({ ...p, cantidad: '', observacion: '', estado: Boolean(p.estado) })));
       setBebidas(bebidasRes.data.map(b => ({ ...b, cantidad: '' })));
       setCategorias(categoriasRes.data);
     } catch (error) {
@@ -117,36 +117,58 @@ export default function Ventas() {
   };
 
   const productosFiltrados = () => {
-    const platosFiltrados = platos.filter(p =>
-      p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!categoriaSeleccionada || p.categoria_id === categoriaSeleccionada)
-    );
-    const bebidasFiltradas = bebidas.filter(b =>
-      b.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const term = searchTerm.trim().toLowerCase();
 
-    if (tabValue === 0) return platosFiltrados;
-    if (tabValue === 1) return bebidasFiltradas;
-    return [];
+    const platosMarcados = platos
+      .filter(p =>
+        p.nombre.toLowerCase().includes(term) &&
+        (!categoriaSeleccionada || p.categoria_id === categoriaSeleccionada)
+      )
+      .map(p => ({ ...p, tipo: 'plato' }));
+
+    const bebidasMarcadas = bebidas
+      .filter(b => b.nombre.toLowerCase().includes(term))
+      .map(b => ({ ...b, tipo: 'bebida' }));
+
+    if (term !== '') {
+      // Buscar muestra ambos tipos
+      return [...platosMarcados, ...bebidasMarcadas];
+    }
+
+    // Sin búsqueda, respetar pestañas
+    return tabValue === 0 ? platosMarcados : bebidasMarcadas;
   };
+
+
   const actualizarStockBebidas = (itemsVendidos) => {
-  setBebidas(prevBebidas => {
-    return prevBebidas.map(bebida => {
-      const itemVendido = itemsVendidos.find(
-        item => item.tipo === 'bebida' && item.id === bebida.id
-      );
-      if (itemVendido) {
-        // Reducir stock según cantidad vendida
-        return { ...bebida, stock: bebida.stock - itemVendido.cantidad };
-      }
-      return bebida;
+    setBebidas(prevBebidas => {
+      return prevBebidas.map(bebida => {
+        const itemVendido = itemsVendidos.find(
+          item => item.tipo === 'bebida' && item.id === bebida.id
+        );
+        if (itemVendido) {
+          // Reducir stock según cantidad vendida
+          return { ...bebida, stock: bebida.stock - itemVendido.cantidad };
+        }
+        return bebida;
+      });
     });
-  });
-};
+  };
 
 
-  const renderProducto = (producto, tipo) => (
-    <Card key={`${tipo}-${producto.id}`} className="producto-card">
+  const renderProducto = (producto, tipo) => {
+  const deshabilitado = !Boolean(producto.estado);
+
+  return (
+    <Card
+      key={`${tipo}-${producto.id}`}
+      className="producto-card"
+      sx={{
+        opacity: deshabilitado ? 0.5 : 1,
+        pointerEvents: deshabilitado ? 'none' : 'auto',
+        transition: 'opacity 0.3s',
+      }}
+    >
       <Box className="producto-img-container">
         <img
           src={`${BASE_URL_STORAGE}${producto.imagen}`}
@@ -160,6 +182,7 @@ export default function Ventas() {
           </Box>
         )}
       </Box>
+
       <CardContent
         sx={{
           display: 'flex',
@@ -217,58 +240,66 @@ export default function Ventas() {
           )}
         </Box>
 
-        <TextField
-          label="Cantidad"
-          type="number"
-          variant="outlined"
-          size="small"
-          fullWidth
-          value={producto.cantidad || ''}
-          onChange={e => {
-            const cant = e.target.value === '' ? '' : parseInt(e.target.value);
+        {!deshabilitado ? (
+          <>
+            <TextField
+              label="Cantidad"
+              type="number"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={producto.cantidad || ''}
+              onChange={e => {
+                const cant = e.target.value === '' ? '' : parseInt(e.target.value);
 
-            if (tipo === 'bebida') {
-              if (cant > producto.stock) {
-                mostrarErrorCantidad(`Cantidad máxima disponible: ${producto.stock}`);
-                return; // No actualizar estados
-              }
-              // Si pasa validación, actualizar
-              setBebidas(prev => prev.map(b => b.id === producto.id ? { ...b, cantidad: cant } : b));
-              actualizarCarrito({ ...producto, tipo }, cant);
+                if (tipo === 'bebida') {
+                  if (cant > producto.stock) {
+                    mostrarErrorCantidad(`Cantidad máxima disponible: ${producto.stock}`);
+                    return;
+                  }
+                  setBebidas(prev => prev.map(b => b.id === producto.id ? { ...b, cantidad: cant } : b));
+                  actualizarCarrito({ ...producto, tipo }, cant);
 
-            } else {
-              // Platos no tienen stock? O no validas, solo actualizas
-              setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, cantidad: cant } : p));
-              actualizarCarrito({ ...producto, tipo }, cant, producto.observacion || '');
-            }
-          }}
+                } else {
+                  setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, cantidad: cant } : p));
+                  actualizarCarrito({ ...producto, tipo }, cant, producto.observacion || '');
+                }
+              }}
+              inputProps={{ min: 0 }}
+              className="cantidad-input"
+            />
 
-          inputProps={{ min: 0 }}
-          className="cantidad-input"
-        />
-
-        {tipo === 'plato' && (
-          <TextField
-            label="Observación"
-            variant="outlined"
-            size="small"
-            fullWidth
-            multiline
-            rows={2}
-            value={producto.observacion || ''}
-            onChange={e => {
-              const obs = e.target.value;
-              setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, observacion: obs } : p));
-              actualizarCarrito({ ...producto, tipo }, producto.cantidad || '', obs);
-            }}
-            sx={{ mt: 1 }}
-            className="observacion-input"
-            placeholder="Agregar observaciones..."
-          />
+            {tipo === 'plato' && (
+              <TextField
+                label="Observación"
+                variant="outlined"
+                size="small"
+                fullWidth
+                multiline
+                rows={2}
+                value={producto.observacion || ''}
+                onChange={e => {
+                  const obs = e.target.value;
+                  setPlatos(prev => prev.map(p => p.id === producto.id ? { ...p, observacion: obs } : p));
+                  actualizarCarrito({ ...producto, tipo }, producto.cantidad || '', obs);
+                }}
+                sx={{ mt: 1 }}
+                className="observacion-input"
+                placeholder="Agregar observaciones..."
+              />
+            )}
+          </>
+        ) : (
+          <Typography sx={{ mt: 1, fontStyle: 'italic', color: 'gray' }}>
+            Producto deshabilitado
+          </Typography>
         )}
+
       </CardContent>
     </Card>
   );
+};
+
 
   return (
     <>
@@ -304,7 +335,7 @@ export default function Ventas() {
               InputProps={{
                 startAdornment: <SearchIcon className="search-icon" />,
               }}
-              className="search-input"
+              className="search-input resaltado-label"
             />
 
             {tabValue === 0 && (
@@ -316,7 +347,7 @@ export default function Ventas() {
                 InputProps={{
                   startAdornment: <FilterListIcon className="filter-icon" />,
                 }}
-                className="categoria-select"
+                className="categoria-select resaltado-label"
               >
                 <MenuItem value="">Todas las categorías</MenuItem>
                 {categorias.map((cat) => (
@@ -326,37 +357,33 @@ export default function Ventas() {
                 ))}
               </TextField>
             )}
-          </Box>
 
-          <Box className="estadisticas-container">
-            <Box className="estadistica-card">
-              <Typography className="estadistica-label">
-                Total Productos
-              </Typography>
-              <Typography className="estadistica-valor">
-                {productosFiltrados().length}
-              </Typography>
-            </Box>
-
-            {carrito.length > 0 && (
-              <Box className="estadistica-card estadistica-carrito">
+            <Box className="estadisticas-container">
+              <Box className="estadistica-card">
                 <Typography className="estadistica-label">
-                  En Carrito
+                  Total Productos
                 </Typography>
                 <Typography className="estadistica-valor">
-                  {carrito.reduce((acc, p) => acc + (p.cantidad || 0), 0)}
+                  {productosFiltrados().length}
                 </Typography>
               </Box>
-            )}
+
+              {carrito.length > 0 && (
+                <Box className="estadistica-card estadistica-carrito">
+                  <Typography className="estadistica-label">
+                    En Carrito
+                  </Typography>
+                  <Typography className="estadistica-valor">
+                    {carrito.reduce((acc, p) => acc + (p.cantidad || 0), 0)}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Box>
 
-          <Box className={tabValue === 0 ? "grid-platos" : "grid-bebidas"}>
-            {productosFiltrados().map((item) =>
-              renderProducto(item, tabValue === 0 ? "plato" : "bebida")
-            )}
-          </Box>
 
-          {productosFiltrados().length === 0 && (
+
+          {productosFiltrados().length === 0 ? (
             <Box className="empty-state">
               <Box className="empty-icon">🔍</Box>
               <Typography className="empty-title">
@@ -365,6 +392,14 @@ export default function Ventas() {
               <Typography className="empty-subtitle">
                 Intenta con otros términos de búsqueda o ajusta los filtros
               </Typography>
+            </Box>
+          ) : (
+            <Box className={searchTerm.trim() ? "grid-mixta" : tabValue === 0 ? "grid-platos" : "grid-bebidas"
+            }
+            >
+              {productosFiltrados().map((item) =>
+                renderProducto(item, item.tipo)
+              )}
             </Box>
           )}
 
@@ -428,10 +463,6 @@ export default function Ventas() {
           {snackbar.message}
         </Alert>
       </Snackbar>
-
-
-
     </>
-
   );
 };

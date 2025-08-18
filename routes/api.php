@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('bebidas', [BebidaController::class, 'index']);
     Route::get('platos', [PlatoController::class, 'index']);
     Route::apiResource('movimientos-caja', MovimientoCajaController::class);
+    Route::patch('/bebidas/{bebida}/aumentar-stock', [BebidaController::class, 'aumentarStock']);
+
   });
   Route::post('/logout', [AuthController::class, 'logout']);
 });
