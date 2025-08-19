@@ -10,7 +10,7 @@ import Plato from './componentes/platos/Plato';
 import Bebida from './componentes/bebidas/Bebidas';
 import Caja from './componentes/caja/Caja';
 import Ventas from './componentes/ventas/Venta';
-
+import Dashboard from './componentes/dashboard/Dashboard';
 function App() {
   return (
     <Router>
@@ -32,6 +32,7 @@ function MainLayout() {
       <div className={!isLoginPage ? "main-content" : ""}>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/usuario" element={<Usuario />} />
           <Route path="/categoria" element={<Categoria />} />
           <Route path="/plato" element={<Plato />} />

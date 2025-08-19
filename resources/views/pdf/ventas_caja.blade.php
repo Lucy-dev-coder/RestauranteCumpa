@@ -103,8 +103,7 @@
     <h1>Ventas de Caja #{{ $caja->id }}</h1>
     <p><strong>Fecha apertura:</strong> {{ $caja->fecha_apertura }}</p>
     <p><strong>Fecha cierre:</strong> {{ $caja->fecha_cierre ?? 'Abierta' }}</p>
-    <p><strong>Monto Apertura:</strong> {{ number_format($caja->monto_apertura, 2) }} Bs.</p>
-
+    
     @if (!empty($caja->monto_cierre))
         <p><strong>Monto Cierre:</strong> {{ number_format($caja->monto_cierre, 2) }} Bs.</p>
     @endif
@@ -115,14 +114,22 @@
         $ventas_qr = $ventas->where('metodo_pago', 'qr')->sum('total');
         $ingresos_manual = $movimientos->where('tipo', 'ingreso')->sum('monto');
         $gastos_manual = $movimientos->where('tipo', 'egreso')->sum('monto');
-        $total_general = $ventas_efectivo + $ventas_qr + $ingresos_manual - $gastos_manual;
+        $monto_apertura = $caja->monto_apertura;
+
+        $total_general = $monto_apertura + $ventas_efectivo + $ventas_qr + $ingresos_manual - $gastos_manual;
         $ingresos = $movimientos->where('tipo', 'ingreso');
         $gastos = $movimientos->where('tipo', 'egreso');
     @endphp
 
-    @if ($ventas_efectivo || $ventas_qr || $ingresos_manual || $gastos_manual)
+    @if ($monto_apertura || $ventas_efectivo || $ventas_qr || $ingresos_manual || $gastos_manual)
         <div class="resumen">
             <h2>Resumen General</h2>
+
+            @if ($monto_apertura)
+                <div class="resumen-item"><span>Monto Apertura:</span><span>{{ number_format($monto_apertura, 2) }}
+                        Bs.</span></div>
+            @endif
+
             @if ($ventas_efectivo)
                 <div class="resumen-item"><span>Ventas en efectivo:</span><span>{{ number_format($ventas_efectivo, 2) }}
                         Bs.</span></div>
@@ -139,6 +146,7 @@
                 <div class="resumen-item" style="color: #e74c3c;"><span>Gastos
                         manuales:</span><span>-{{ number_format($gastos_manual, 2) }} Bs.</span></div>
             @endif
+
             <div class="resumen-item total-general"><span>Total
                     General:</span><span>{{ number_format($total_general, 2) }} Bs.</span></div>
         </div>

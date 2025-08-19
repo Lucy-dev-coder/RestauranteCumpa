@@ -54,7 +54,7 @@ const EditarCaja = ({ open, caja, onClose, onGuardar }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle style={{ color: 'orange', backgroundColor: '#1A2229' }}>
-        Editar Caja
+        Cerrar Caja
       </DialogTitle>
       <DialogContent style={{ backgroundColor: '#1A2229', color: 'white' }}>
 
@@ -78,7 +78,7 @@ const EditarCaja = ({ open, caja, onClose, onGuardar }) => {
 
         <TextField
           margin="dense"
-          label="Observaciones"
+          label="Observaciones(Opcional)"
           type="text"
           fullWidth
           multiline

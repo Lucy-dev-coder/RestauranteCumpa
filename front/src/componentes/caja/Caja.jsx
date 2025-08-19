@@ -39,10 +39,15 @@ const Caja = () => {
 
     const handleOpenAgregar = () => setOpenAgregar(true);
     const handleCloseAgregar = () => setOpenAgregar(false);
-    const onVerDetalles = (caja) => {
-        const url = `${API_BASE_URL}/api/cajas/${caja.id}/pdf`;
-        window.open(url, '_blank');
-    };
+const onVerDetalles = (caja) => {
+    const token = '121|RBTtKYTD4yjsJUsLUZWv78iavXOcVd0vUdC4JSsX67f945da';
+    // Enviar token como query string
+    const url = `${API_BASE_URL}/api/cajas/${caja.id}/pdf?token=${token}`;
+    window.open(url, '_blank');
+};
+
+
+
     const handleOpenEditar = (caja) => {
         setCajaEditar(caja);
         setOpenEditar(true);

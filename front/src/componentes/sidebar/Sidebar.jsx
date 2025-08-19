@@ -91,12 +91,11 @@ const Sidebar = () => {
           <ul>
             {isAdmin && (
               <>
-                {/* <li>
+                <li>
                   <NavLink to="/dashboard" exact="true" activeclassname="active" onClick={handleLinkClick}>
-                    <FaTachometerAlt /> &nbsp;Dashboard
+                    <FaTachometerAlt /> &nbsp;Reportes
                   </NavLink>
-                </li> */}
-
+                </li>
 
                 <li>
                   <NavLink to="/usuario" activeclassname="active" onClick={handleLinkClick}>

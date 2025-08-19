@@ -11,7 +11,7 @@ use App\Http\Controllers\CajaController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\MovimientoCajaController;
 use App\Http\Middleware\RoleMiddleware;
-
+use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('categorias', CategoriaController::class);
         Route::apiResource('bebidas', BebidaController::class);
         Route::apiResource('platos', PlatoController::class);
+        Route::get('/dashboard/resumen-por-fecha', [DashboardController::class, 'resumenPorFecha']);
     });
 
     // Rutas para admin y cajero

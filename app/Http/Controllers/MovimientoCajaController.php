@@ -81,14 +81,23 @@ class MovimientoCajaController extends Controller
         return response()->json(null, 204);
     }
 
-    public function generarPdfVentas($idCaja)
+    public function generarPdfVentas(Request $request, $idCaja)
     {
+        $token = $request->query('token');
+
+        // Token válido predefinido
+        $tokenValido = '121|RBTtKYTD4yjsJUsLUZWv78iavXOcVd0vUdC4JSsX67f945da';
+
+        if ($token !== $tokenValido) {
+            abort(403, 'No autorizado'); // Bloquea si no coincide
+        }
+
         $caja = Caja::with(['ventas', 'movimientosCaja'])->findOrFail($idCaja);
         $ventas = $caja->ventas;
         $movimientos = $caja->movimientosCaja;
+
         $pdf = PDF::loadView('pdf.ventas_caja', compact('caja', 'ventas', 'movimientos'));
 
         return $pdf->stream("ventas_caja_{$caja->id}.pdf");
     }
-    
 }
