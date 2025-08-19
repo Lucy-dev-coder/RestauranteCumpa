@@ -82,7 +82,7 @@ const EditarBebida = ({ open, bebida, onClose, onGuardar }) => {
           InputLabelProps={{ style: { color: 'white' } }}
           InputProps={{ style: { color: 'white', border: '1px solid orange' } }}
         />
-        <TextField
+        {/* <TextField
           margin="dense"
           label="Stock"
           type="number"
@@ -92,9 +92,9 @@ const EditarBebida = ({ open, bebida, onClose, onGuardar }) => {
           InputLabelProps={{ style: { color: 'white' } }}
           InputProps={{ style: { color: 'white', border: '1px solid orange' } }}
           helperText="Cantidad en inventario (opcional)"
-        />
+        /> */}
 
-  
+
         <input
           accept="image/*"
           type="file"

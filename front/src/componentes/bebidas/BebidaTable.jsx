@@ -6,10 +6,12 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowCircleUp from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDown from '@mui/icons-material/ArrowCircleDown';
 import imagenes from '../../api/apiConfig'; // Ajusta ruta según tu estructura
 // Ajusta esta URL base según dónde estén alojadas las imágenes en tu backend
 const URL_IMAGENES_BASE = imagenes;
-const BebidaTable = ({ bebidas, onAgregar, onEditar, onEliminar, onToggleEstado }) => {
+const BebidaTable = ({ bebidas, onAgregar, onEditar, onEliminar, onToggleEstado, onCambiarStock }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
@@ -94,6 +96,7 @@ const BebidaTable = ({ bebidas, onAgregar, onEditar, onEliminar, onToggleEstado 
                   <TableCell>
                     <button
                       onClick={() => onToggleEstado(bebida)}
+                      title='Cambiar estado'
                       style={{
                         marginLeft: '8px',
                         backgroundColor: bebida.estado ? 'green' : 'crimson',
@@ -108,6 +111,16 @@ const BebidaTable = ({ bebidas, onAgregar, onEditar, onEliminar, onToggleEstado 
                     </button>
                   </TableCell>
                   <TableCell>
+                    <Button
+                      onClick={() => onCambiarStock(bebida)}
+                      title='Cambiar stock'
+                      style={{ background: "none", border: "none", cursor: "pointer" }}
+                    >
+                      <ArrowCircleUp style={{ color: "green", marginRight: 4 }} />
+                      <ArrowCircleDown style={{ color: "red" }} />
+                    </Button>
+
+
                     <Button
                       onClick={() => onEditar(bebida)}
                       color="primary"

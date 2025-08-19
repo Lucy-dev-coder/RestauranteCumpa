@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Caja;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Illuminate\Support\Facades\Log;
 
 class VentaController extends Controller
 {
@@ -70,6 +73,7 @@ class VentaController extends Controller
                         'plato' => $item['nombre'],
                         'cantidad' => $item['cantidad'],
                         'precio_unitario' => $item['precio'],
+                        'obs' => $item['observacion']
                     ]);
                 } elseif ($item['tipo'] === 'bebida') {
                     DetalleVentasBebida::create([
@@ -78,6 +82,7 @@ class VentaController extends Controller
                         'bebida_id' => $item['id'] ?? null,
                         'cantidad' => $item['cantidad'],
                         'precio_unitario' => $item['precio'],
+                        'obs' => $item['observacion']
                     ]);
 
                     // Reducir stock de la bebida
@@ -88,6 +93,8 @@ class VentaController extends Controller
             }
 
             DB::commit();
+            // Imprimir la venta
+            $this->imprimirVenta($venta->id);
 
             return response()->json([
                 'message' => 'Venta registrada con éxito',
@@ -101,6 +108,92 @@ class VentaController extends Controller
             ], 500);
         }
     }
+    // Función para imprimir la venta
+    protected function imprimirVenta($ventaId)
+    {
+        $venta = Venta::with(['detalleVentas', 'detalleVentasBebida'])->find($ventaId);
+        if (!$venta) return;
+
+        // Primera tanda: platos a cocina y parrilla
+        $impresorasPlatos = [
+            'EPSON_COCINA',
+            'EPSON_PARRILLA',
+        ];
+
+        foreach ($impresorasPlatos as $nombreImpresora) {
+            try {
+                $connector = new \Mike42\Escpos\PrintConnectors\WindowsPrintConnector($nombreImpresora);
+                $printer = new \Mike42\Escpos\Printer($connector);
+
+                // Encabezado grande y centrado
+                $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(2, 2);
+                // Verificar si es número o texto
+                if (is_numeric($venta->mesa)) {
+                    $encabezado = "MESA {$venta->mesa}";
+                } else {
+                    $encabezado = "LLEVAR: {$venta->mesa}";
+                }
+                $printer->text($encabezado . "\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("id: {$venta->id}\n");
+                $printer->text("------------------------------\n");
+
+                $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
+
+                // Imprimir solo platos
+                foreach ($venta->detalleVentas as $plato) {
+                    $obs = !empty($plato->obs) ? " ({$plato->obs})" : "";
+                    $printer->text("{$plato->cantidad} {$plato->plato}{$obs}\n");
+                }
+                $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
+                $printer->text("------------------------------\n");
+
+                $printer->cut();
+                $printer->close();
+            } catch (\Exception $e) {
+                Log::error("Error al imprimir platos en {$nombreImpresora}: " . $e->getMessage());
+            }
+        }
+
+        // Segunda impresión temporal: bebidas en cocina (mañana se cambia a impresora de bebidas)
+        if (count($venta->detalleVentasBebida) > 0) {
+            $impresoraBebidasTemporal = 'EPSON_COCINA';
+            try {
+                $connector = new \Mike42\Escpos\PrintConnectors\WindowsPrintConnector($impresoraBebidasTemporal);
+                $printer = new \Mike42\Escpos\Printer($connector);
+
+                // Encabezado grande y centrado
+                $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(2, 2);
+                // Verificar si es número o texto
+                if (is_numeric($venta->mesa)) {
+                    $encabezado = "MESA {$venta->mesa}";
+                } else {
+                    $encabezado = "LLEVAR: {$venta->mesa}";
+                }
+                $printer->text($encabezado . "\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("id: {$venta->id}\n");
+                $printer->text("------------------------------\n");
+
+                $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
+
+                // Imprimir solo bebidas
+                foreach ($venta->detalleVentasBebida as $bebida) {
+                    $printer->text("{$bebida->cantidad} {$bebida->bebida} \n");
+                }
+                $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
+                $printer->text("------------------------------\n");
+
+                $printer->cut();
+                $printer->close();
+            } catch (\Exception $e) {
+                Log::error("Error al imprimir bebidas temporales en {$impresoraBebidasTemporal}: " . $e->getMessage());
+            }
+        }
+    }
+
 
 
     // Mostrar venta específica

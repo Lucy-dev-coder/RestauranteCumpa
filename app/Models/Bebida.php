@@ -17,5 +17,8 @@ class Bebida extends Model
         'imagen',
         'estado',
     ];
-
+    public function movimientos()
+    {
+        return $this->hasMany(MovimientoBebida::class);
+    }
 }

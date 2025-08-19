@@ -6,6 +6,7 @@ import Spinner from '../../componentes/spinner/Spinner';
 import BebidaTable from './BebidaTable';
 import AgregarBebida from './AgregarBebida';
 import EditarBebida from './EditarBebida';
+import CambiarStockBebida from './CambiarStockBebida';
 
 const Bebidas = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,8 @@ const Bebidas = () => {
   const [openAgregar, setOpenAgregar] = useState(false);
   const [openEditar, setOpenEditar] = useState(false);
   const [bebidaEditar, setBebidaEditar] = useState(null);
-
+  const [openStock, setOpenStock] = useState(false);
+  const [bebidaStock, setBebidaStock] = useState(null);
   const obtenerBebidas = async () => {
     setLoading(true);
     try {
@@ -41,7 +43,14 @@ const Bebidas = () => {
     setBebidaEditar(null);
     setOpenEditar(false);
   };
-
+  const handleOpenStock = (bebida) => {
+    setBebidaStock(bebida);
+    setOpenStock(true);
+  };
+  const handleCloseStock = () => {
+    setBebidaStock(null);
+    setOpenStock(false);
+  };
   const agregarBebida = async (nuevaBebida) => {
     try {
       await axiosAuth.post('/bebidas', nuevaBebida, {
@@ -144,8 +153,30 @@ const Bebidas = () => {
             onEditar={handleOpenEditar}
             onEliminar={eliminarBebida}
             onToggleEstado={toggleEstadoBebida}
+            onCambiarStock={handleOpenStock}
           />
-
+          <CambiarStockBebida
+            open={openStock}
+            bebida={bebidaStock}
+            onClose={handleCloseStock}
+            onGuardar={async (id, data) => {
+              try {
+                await axiosAuth.put(`/bebidas/${id}/stock`, data); // tu ruta de update
+                obtenerBebidas();
+                handleCloseStock();
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Éxito',
+                  text: 'Stock actualizado correctamente',
+                  showConfirmButton: false,
+                  timer: 800,           // Duración en milisegundos
+                  timerProgressBar: true
+                });
+              } catch (err) {
+                Swal.fire('Error', 'No se pudo actualizar el stock', 'error');
+              }
+            }}
+          />
           <AgregarBebida
             open={openAgregar}
             onClose={handleCloseAgregar}

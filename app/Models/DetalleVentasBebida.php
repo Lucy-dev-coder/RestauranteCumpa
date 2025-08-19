@@ -17,6 +17,7 @@ class DetalleVentasBebida extends Model
         'bebida_id',
         'cantidad',
         'precio_unitario',
+        'obs',
     ];
 
     // Relación con Venta

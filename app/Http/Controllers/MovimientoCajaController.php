@@ -86,7 +86,6 @@ class MovimientoCajaController extends Controller
         $caja = Caja::with(['ventas', 'movimientosCaja'])->findOrFail($idCaja);
         $ventas = $caja->ventas;
         $movimientos = $caja->movimientosCaja;
-
         $pdf = PDF::loadView('pdf.ventas_caja', compact('caja', 'ventas', 'movimientos'));
 
         return $pdf->stream("ventas_caja_{$caja->id}.pdf");

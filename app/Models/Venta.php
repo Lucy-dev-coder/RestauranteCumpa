@@ -30,4 +30,14 @@ class Venta extends Model
     {
         return $this->belongsTo(User::class, 'usuario_id');
     }
+    public function detalleVentas()
+    {
+        return $this->hasMany(DetalleVenta::class, 'venta_id');
+    }
+
+    // Relación con las bebidas
+    public function detalleVentasBebida()
+    {
+        return $this->hasMany(DetalleVentasBebida::class, 'venta_id');
+    }
 }

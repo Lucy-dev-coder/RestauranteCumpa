@@ -9,17 +9,13 @@ return new class extends Migration {
     {
         Schema::create('movimientos_bebidas', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('bebida_id')->nullable();
-            $table->foreign('bebida_id')
-                ->references('id')
-                ->on('bebidas')
-                ->onDelete('set null');
-
-            $table->enum('tipo', ['ingreso', 'egreso']);
-            $table->integer('cantidad');
-
-            $table->timestamps(); // Fecha y hora del movimiento
+            $table->foreignId('bebida_id')->constrained('bebidas')->onDelete('cascade'); // Relación con bebidas
+            $table->enum('tipo', ['entrada', 'salida']); // entrada = aumento, salida = reducción
+            $table->integer('cantidad'); // cantidad movida
+            $table->integer('stock_anterior'); // stock antes del movimiento
+            $table->integer('stock_nuevo'); // stock después del movimiento
+            $table->string('motivo', 255)->nullable(); // opcional (ej: compra, ajuste, pérdida, etc.)
+            $table->timestamps();
         });
     }
 

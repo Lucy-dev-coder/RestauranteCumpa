@@ -22,8 +22,7 @@ return new class extends Migration {
 
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 10, 2);
-            
-
+            $table->string('obs', 255)->nullable();
             $table->timestamps();
         });
     }

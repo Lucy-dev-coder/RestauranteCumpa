@@ -3,23 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bebida;
+use App\Models\MovimientoBebida;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class BebidaController extends Controller
 {
-    /**
-     * Listar todas las bebidas.
-     */
     public function index()
     {
         $bebidas = Bebida::all();
         return response()->json($bebidas);
     }
 
-    /**
-     * Guardar una nueva bebida.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -41,17 +36,11 @@ class BebidaController extends Controller
         return response()->json($bebida, 201);
     }
 
-    /**
-     * Mostrar una bebida específica.
-     */
     public function show(Bebida $bebida)
     {
         return response()->json($bebida);
     }
 
-    /**
-     * Actualizar una bebida.
-     */
     public function update(Request $request, Bebida $bebida)
     {
         $request->validate([
@@ -76,9 +65,6 @@ class BebidaController extends Controller
         return response()->json($bebida);
     }
 
-    /**
-     * Eliminar una bebida.
-     */
     public function destroy(Bebida $bebida)
     {
         if ($bebida->imagen && Storage::disk('public')->exists($bebida->imagen)) {
@@ -88,5 +74,40 @@ class BebidaController extends Controller
         $bebida->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Ajustar stock de una bebida.
+     */
+    public function ajustarStock(Request $request, Bebida $bebida)
+    {
+        $request->validate([
+            'stock'  => 'required|integer', // puede ser positivo o negativo
+            'motivo' => 'nullable|string|max:255',
+        ]);
+
+        $cantidad = $request->input('stock');
+        $motivo = $request->input('motivo', null);
+
+        $stockAnterior = $bebida->stock ?? 0;
+        $stockNuevo = $stockAnterior + $cantidad;
+
+        // Actualizar stock
+        $bebida->update(['stock' => $stockNuevo]);
+
+        // Registrar movimiento
+        MovimientoBebida::create([
+            'bebida_id'     => $bebida->id,
+            'tipo'          => $cantidad > 0 ? 'entrada' : 'salida',
+            'cantidad'      => abs($cantidad),
+            'stock_anterior'=> $stockAnterior,
+            'stock_nuevo'   => $stockNuevo,
+            'motivo'        => $motivo,
+        ]);
+
+        return response()->json([
+            'bebida' => $bebida,
+            'mensaje' => 'Stock ajustado correctamente',
+        ]);
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration {
 
             // Bebida relacionada
             $table->string('bebida', 100);
-            
+
             $table->unsignedBigInteger('bebida_id');
             $table->foreign('bebida_id')
                 ->references('id')
@@ -28,7 +28,7 @@ return new class extends Migration {
 
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 10, 2);
-
+            $table->string('obs', 255)->nullable();
 
             $table->timestamps();
         });

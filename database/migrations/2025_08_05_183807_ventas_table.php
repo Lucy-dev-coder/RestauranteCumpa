@@ -25,7 +25,7 @@ return new class extends Migration {
                 ->onDelete('set null');
 
             $table->decimal('total', 10, 2);
-            $table->string('mesa', 10)->nullable();
+            $table->string('mesa', 50)->nullable();
             $table->enum('metodo_pago', ['efectivo', 'qr'])->default('efectivo');
 
             $table->timestamps();

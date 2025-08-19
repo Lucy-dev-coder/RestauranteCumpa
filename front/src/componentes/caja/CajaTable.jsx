@@ -80,7 +80,9 @@ const CajaTable = ({
                             <TableCell>Apertura</TableCell>
                             <TableCell>Apertura/Cierre</TableCell> {/* Cambiado */}
                             <TableCell>Cierre</TableCell>
-                            <TableCell>Monto Esperado</TableCell>
+                            {userRole === 'admin' && (
+                                <TableCell>Monto Esperado</TableCell>
+                            )}
                             <TableCell>Observ.</TableCell>
                             <TableCell>Estado</TableCell>
                             <TableCell>Acciones</TableCell>
@@ -106,7 +108,9 @@ const CajaTable = ({
                                             <span style={{ color: 'white', borderRadius: '50%', backgroundColor: 'red' }}>C</span>: {formatDate(caja.fecha_cierre)}
                                         </TableCell>
                                         <TableCell>{caja.monto_cierre ?? '-'} Bs.</TableCell>
-                                        <TableCell>{caja.monto_esperado ?? '-'} Bs.</TableCell>
+                                        {userRole === 'admin' && (
+                                            <TableCell>{caja.monto_esperado ?? '-'} Bs.</TableCell>
+                                        )}
                                         <TableCell>{caja.observaciones ?? '-'}</TableCell>
                                         <TableCell
                                             style={{

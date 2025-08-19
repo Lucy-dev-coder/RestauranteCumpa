@@ -16,6 +16,7 @@ class DetalleVenta extends Model
         'plato',
         'cantidad',
         'precio_unitario',
+        'obs',
     ];
 
     // Relación con Venta

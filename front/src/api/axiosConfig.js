@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosAuth = axios.create({
-  baseURL: 'http://localhost/Sistema_cumpa/RestauranteCumpa/public/api',
+  baseURL: 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public/api',
 });
 
 // Antes de cada petición añade el token actualizado
