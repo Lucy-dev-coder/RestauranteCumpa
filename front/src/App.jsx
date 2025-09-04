@@ -11,6 +11,7 @@ import Bebida from './componentes/bebidas/Bebidas';
 import Caja from './componentes/caja/Caja';
 import Ventas from './componentes/ventas/Venta';
 import Dashboard from './componentes/dashboard/Dashboard';
+import RegistroVenta from './componentes/registros/RegistroVenta';
 function App() {
   return (
     <Router>
@@ -39,6 +40,7 @@ function MainLayout() {
           <Route path="/bebida" element={<Bebida />} />
           <Route path="/caja" element={<Caja />} />
           <Route path="/ventas" element={<Ventas />} />
+          <Route path="/registro" element={<RegistroVenta />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

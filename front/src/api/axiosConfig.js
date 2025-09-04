@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const axiosAuth = axios.create({
+  //baseURL: 'http://localhost/ELCUMPA/public/api',
   baseURL: 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public/api',
 });
 

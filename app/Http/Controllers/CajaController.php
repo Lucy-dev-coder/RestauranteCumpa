@@ -83,8 +83,11 @@ class CajaController extends Controller
             'observaciones' => 'nullable|string',
         ]);
 
-        $ventasIds = DB::table('ventas')->where('caja_id', $id)->pluck('id');
-
+        //$ventasIds = DB::table('ventas')->where('caja_id', $id)->pluck('id');
+        $ventasIds = DB::table('ventas')
+            ->where('caja_id', $id)
+            ->where('metodo_pago', '!=', 'qr') // 🔥 excluir las ventas con QR
+            ->pluck('id');
         $totalPlatos = DB::table('detalle_ventas')
             ->whereIn('venta_id', $ventasIds)
             ->selectRaw('SUM(cantidad * precio_unitario) as total')

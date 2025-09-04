@@ -216,10 +216,14 @@
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
-  background: white !important;
+  background: linear-gradient(200deg, #516382d6 0%, #2d3748) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   border: 2px solid transparent !important;
   position: relative !important;
+  margin-left: 10% !important;
+  /* Empuja hacia la derecha */
+  margin-right: 0 !important;
+
 }
 
 
@@ -498,25 +502,25 @@
 /* ===========================================
    DARK MODE SUPPORT (OPCIONAL)
 =========================================== */
-@media (prefers-color-scheme: dark) {
-  .ventas-container {
-    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-  }
 
-  .ventas-content {
-    background: rgba(47, 72, 45, 0.95);
-    color: white;
-  }
-
-  .producto-card {
-    background: linear-gradient(200deg, #516382d6 0%, #2d3748 100%) !important;
-    color: white !important;
-  }
-
-  .controles-container {
-    background-color: #e9686894;
-  }
+.ventas-container {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
 }
+
+.ventas-content {
+  background: rgba(47, 72, 45, 0.95);
+  color: white;
+}
+
+.producto-card {
+  background: linear-gradient(200deg, #516382d6 0%, #2d3748) !important;
+  color: white !important;
+}
+
+.controles-container {
+  background-color: #e9686894;
+}
+
 
 /* ===========================================
   PESTAÑAS

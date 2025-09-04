@@ -4,7 +4,7 @@ import './Sidebar.css';
 import {
   FaTachometerAlt, FaUsers, FaTags, FaCloudDownloadAlt,
   FaBars, FaUser, FaSignOutAlt, FaCashRegister,
-  FaGlassCheers, FaShoppingCart
+  FaGlassCheers, FaShoppingCart, FaClipboardList
 } from 'react-icons/fa';
 import { GiChickenOven } from 'react-icons/gi';
 import Swal from 'sweetalert2';
@@ -134,7 +134,12 @@ const Sidebar = () => {
                 </li>
               </>
             )}
-
+            {isAdmin && (
+              <li>
+                <NavLink to="/registro" activeclassname="active" onClick={handleLinkClick}>
+                  <FaClipboardList /> &nbsp;Registros
+                </NavLink>
+              </li>)}
             {/* {isAdmin && (
               <li>
                 <NavLink to="/backup" activeclassname="active" onClick={handleLinkClick}>

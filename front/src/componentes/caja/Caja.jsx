@@ -20,7 +20,8 @@ const Caja = () => {
     // Al inicio del componente Caja
     const usuario = JSON.parse(localStorage.getItem('usuario')) || { rol: '' };
 
-    const API_BASE_URL = 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public'; // Cambia por la URL real de tu backend
+    //const API_BASE_URL = 'http://localhost/ELCUMPA/public'; // Cambia por la URL real de tu backend
+    const API_BASE_URL = 'http://localhost/LARAVEL/ELCUMPA/RestauranteCumpa/public';
     const obtenerCajas = async () => {
         setLoading(true);
         try {

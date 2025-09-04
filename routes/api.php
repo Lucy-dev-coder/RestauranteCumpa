@@ -24,12 +24,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('bebidas', BebidaController::class);
         Route::apiResource('platos', PlatoController::class);
         Route::get('/dashboard/resumen-por-fecha', [DashboardController::class, 'resumenPorFecha']);
+        Route::apiResource('ventas', VentaController::class);
     });
 
     // Rutas para admin y cajero
     Route::middleware([RoleMiddleware::class . ':cajero'])->group(function () {
         Route::apiResource('cajas', CajaController::class);
-        Route::apiResource('ventas', VentaController::class);
+        Route::post('/ventas', [VentaController::class, 'store']);
         Route::get('/cajas/abiertas', [CajaController::class, 'cajasAbiertas']);
         Route::get('categorias', [CategoriaController::class, 'index']);
         Route::get('bebidas', [BebidaController::class, 'index']);
@@ -41,4 +42,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::get('cajas/{id}/pdf', [MovimientoCajaController::class, 'generarPdfVentas']);
-

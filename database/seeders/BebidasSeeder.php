@@ -28,6 +28,15 @@ class BebidasSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'nombre' => 'Frutall Personal',
+                'precio' => 5.00,
+                'stock' => 50,
+                'imagen' => 'imagenes/frutall.jpeg',
+                'estado' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
 
             //COCACOLA
             [
